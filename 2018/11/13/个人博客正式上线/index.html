@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="大二的时候开始写博客，现在觉得还是应该有一个自己的网站，希望能自己总结知识的同时帮助别人学习。专业的文章仍然会发表在专业的社区，一些笔记或者读起来比较轻松的文章会放在这个网站和知乎专栏。这个页面是按时间顺序自己在其它平台发表的技术文章的汇总，欢迎阅读:) 讲过的talk: XKungfoo2018:2017年恶意代码威胁回顾和快速分析实践 在CSDN发表的文章(上大学的时候一些笔记，已经不在这上面">
+<meta property="og:type" content="article">
+<meta property="og:title" content="个人博客正式上线">
+<meta property="og:url" content="http://yoursite.com/2018/11/13/个人博客正式上线/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="大二的时候开始写博客，现在觉得还是应该有一个自己的网站，希望能自己总结知识的同时帮助别人学习。专业的文章仍然会发表在专业的社区，一些笔记或者读起来比较轻松的文章会放在这个网站和知乎专栏。这个页面是按时间顺序自己在其它平台发表的技术文章的汇总，欢迎阅读:) 讲过的talk: XKungfoo2018:2017年恶意代码威胁回顾和快速分析实践 在CSDN发表的文章(上大学的时候一些笔记，已经不在这上面">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-04-26T12:46:29.102Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="个人博客正式上线">
+<meta name="twitter:description" content="大二的时候开始写博客，现在觉得还是应该有一个自己的网站，希望能自己总结知识的同时帮助别人学习。专业的文章仍然会发表在专业的社区，一些笔记或者读起来比较轻松的文章会放在这个网站和知乎专栏。这个页面是按时间顺序自己在其它平台发表的技术文章的汇总，欢迎阅读:) 讲过的talk: XKungfoo2018:2017年恶意代码威胁回顾和快速分析实践 在CSDN发表的文章(上大学的时候一些笔记，已经不在这上面">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2018/11/13/个人博客正式上线/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>个人博客正式上线 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/13/个人博客正式上线/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">个人博客正式上线
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-11-13 15:08:33" itemprop="dateCreated datePublished" datetime="2018-11-13T15:08:33+08:00">2018-11-13</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-04-26 20:46:29" itemprop="dateModified" datetime="2019-04-26T20:46:29+08:00">2019-04-26</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>大二的时候开始写博客，现在觉得还是应该有一个自己的网站，希望能自己总结知识的同时帮助别人学习。专业的文章仍然会发表在专业的社区，一些笔记或者读起来比较轻松的文章会放在这个网站和<a href="https://zhuanlan.zhihu.com/c_1105168589493125120" title="知乎专栏" target="_blank" rel="noopener">知乎专栏</a>。这个页面是按时间顺序自己在其它平台发表的技术文章的汇总，欢迎阅读:)</p>
+<p>讲过的talk:</p>
+<p>XKungfoo2018:<a href="http://img.4hou.com/wp-content/uploads/2018/05/6e1d77e660d4740dc9b7.pdf" target="_blank" rel="noopener">2017年恶意代码威胁回顾和快速分析实践</a></p>
+<p>在CSDN发表的文章(上大学的时候一些笔记，已经不在这上面更新了，有算法分析有操作系统也有安全相关，没有什么技术含量):</p>
+<p><a href="https://blog.csdn.net/qq_32400847" target="_blank" rel="noopener">houjingyi的博客</a></p>
+<p>在公司发表的部分文章(*表示与他人合作):</p>
+<p><a href="https://cert.360.cn/report/detail?id=58e8387ec4c79693354d4797871536ea" target="_blank" rel="noopener">CVE-2019-9213——linux内核用户空间0虚拟地址映射漏洞分析</a></p>
+<p><a href="https://cert.360.cn/report/detail?id=44669690fc7a8daab42472cebd8cfb88" target="_blank" rel="noopener">尝试进行RPC漏洞挖掘</a></p>
+<p><a href="https://cert.360.cn/warning/detail?id=208606780533f78f0731544f1935f8b2" target="_blank" rel="noopener">win10本地提权0Day预警</a></p>
+<p><a href="https://cert.360.cn/warning/detail?id=5c88c22c6d6b015e9fc79b9c2d68bca3" target="_blank" rel="noopener">VPNFilter Botnet情况更新*</a></p>
+<p><a href="https://cert.360.cn/report/detail?id=945a1c98a0b2500c9e1654df9edf08eb" target="_blank" rel="noopener">VPNFilter-新型IoT Botnet深度解析*</a></p>
+<p><a href="https://cert.360.cn/report/detail?id=17444eedf20fed4d90c0e071b6b8a718" target="_blank" rel="noopener">2017年中国高级持续性威胁研究报告*</a></p>
+<p><a href="https://cert.360.cn/warning/detail?id=d5a609929388cfd84c7e9aa8fb943265" target="_blank" rel="noopener">CVE–2017–13156Janus安卓签名漏洞预警分析</a></p>
+<p><a href="https://cert.360.cn/report/detail?id=b8d982931c94db2c4a632eaf04188971" target="_blank" rel="noopener">坏兔子勒索病毒事件基本分析报告(更新：永恒浪漫漏洞使用技术信息)*</a></p>
+<p><a href="https://cert.360.cn/warning/detail?id=0dc8a230ad210be8a8b872a73b18d220" target="_blank" rel="noopener">CCleaner恶意代码分析预警*</a></p>
+<p><a href="https://cert.360.cn/report/detail?id=fccc118f08a9956f474a068ef0b5c407" target="_blank" rel="noopener">XShellGhost事件技术回顾报告*</a></p>
+<p><a href="https://cert.360.cn/report/detail?id=6df70c8c9fa83da71e688171702da92f" target="_blank" rel="noopener">Sorebrect勒索病毒分析报告</a></p>
+<p>在看雪论坛发表的文章:</p>
+<p><a href="https://bbs.pediy.com/thread-250302.htm" target="_blank" rel="noopener">linux内核fuzz技术——trinity</a></p>
+<p><a href="https://bbs.pediy.com/thread-248463.htm" target="_blank" rel="noopener">关于CVE-2017-8890的一点细节</a></p>
+<p><a href="https://bbs.pediy.com/thread-247783.htm" target="_blank" rel="noopener">发两个BSOD的代码，仅供娱乐</a></p>
+<p><a href="https://bbs.pediy.com/thread-230298.htm" target="_blank" rel="noopener">CVE-2015-3636(pingpong root) android内核 UAF漏洞分析</a></p>
+<p><a href="https://bbs.pediy.com/thread-228678.htm" target="_blank" rel="noopener">CVE-2018-1000001 glibc realpath缓冲区溢出漏洞分析</a></p>
+<p><a href="https://bbs.pediy.com/thread-227119.htm" target="_blank" rel="noopener">一个section加密的apk的分析</a></p>
+<p><a href="https://bbs.pediy.com/thread-226696.htm" target="_blank" rel="noopener">linux漏洞缓解机制介绍</a></p>
+<p><a href="https://bbs.pediy.com/thread-225986.htm" target="_blank" rel="noopener">CVE-2018-6789 Exim Off-by-one漏洞分析</a></p>
+<p><a href="https://bbs.pediy.com/thread-225740.htm" target="_blank" rel="noopener">反调试技术总结</a></p>
+<p><a href="https://bbs.pediy.com/thread-225735.htm" target="_blank" rel="noopener">反虚拟机技术总结</a></p>
+<p><a href="https://bbs.pediy.com/thread-225728.htm" target="_blank" rel="noopener">CPU漏洞信息汇总贴</a></p>
+<p><a href="https://bbs.pediy.com/thread-225554.htm" target="_blank" rel="noopener">手把手静态分析FinSpy VM：第三部分第一阶段，反混淆FINSPY VM字节码程序</a></p>
+<p><a href="https://bbs.pediy.com/thread-225295.htm" target="_blank" rel="noopener">DbAPPSec CTF一道题的分析</a></p>
+<p><a href="https://bbs.pediy.com/thread-225273.htm" target="_blank" rel="noopener">手把手静态分析FinSpy VM：第三部分，去虚拟化</a></p>
+<p><a href="https://bbs.pediy.com/thread-225081.htm" target="_blank" rel="noopener">手把手静态分析FinSpy VM：第二部分，VM分析和字节码反汇编</a></p>
+<p><a href="https://bbs.pediy.com/thread-224911.htm" target="_blank" rel="noopener">手把手静态分析FinSpy VM：第一部分，x86去混淆</a></p>
+<p><a href="https://bbs.pediy.com/thread-223844.htm" target="_blank" rel="noopener">CVE-2012-1856 Office ActiveX控件MSCOMCTL.OCX UAF漏洞分析</a></p>
+<p><a href="https://bbs.pediy.com/thread-220386.htm" target="_blank" rel="noopener">滥用GDI对象的ring0原语革命</a></p>
+<p><a href="https://bbs.pediy.com/thread-217035.htm" target="_blank" rel="noopener">格式化字符串漏洞入门</a></p>
+<p>在先知社区发表的文章:</p>
+<p><a href="https://xz.aliyun.com/t/4494" target="_blank" rel="noopener">CVE-2019-2000—android内核binder中fdget优化产生的UAF漏洞的分析</a></p>
+<p><a href="https://xz.aliyun.com/t/4230" target="_blank" rel="noopener">CVE-2018-3639/CVE-2019-7308—Spectre攻击linux内核ebpf的分析</a></p>
+<p><a href="https://xz.aliyun.com/t/4005" target="_blank" rel="noopener">CVE-2018-18281—linux内核中关于TLB漏洞的分析</a></p>
+<p><a href="https://xz.aliyun.com/t/3455" target="_blank" rel="noopener">timer_list结构体在linux内核漏洞利用中的使用</a></p>
+<p>加个wx？aG91amluZ3lpMTU5</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/04/26/读《Malware Data Science》/" rel="prev" title="读《Malware Data Science》">
+                读《Malware Data Science》 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.1"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
