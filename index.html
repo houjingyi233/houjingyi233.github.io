@@ -348,7 +348,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-05-05 11:50:38" itemprop="dateModified" datetime="2019-05-05T11:50:38+08:00">2019-05-05</time>
+                <time title="修改时间：2019-05-14 10:34:10" itemprop="dateModified" datetime="2019-05-14T10:34:10+08:00">2019-05-14</time>
               
             
           </span>
@@ -399,12 +399,14 @@
 <p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-05-05/2019-05-05-04.png" alt=""></p>
 <p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-05-05/2019-05-05-03.png" alt=""></p>
 <p>还有微步在线等平台，就不一一列举了。</p>
-<p>第5章：共享代码识别，这个其实是很有用的一个功能。比如为什么说VPNFilter与BlackEnergy有关，因为它们都用了相同的方式去修改RC4算法进行加密，如果在分析的时候有这样一个共享代码识别的系统，样本扔进去就跑出来识别出共享了BlackEnergy的代码，能省很多精力和时间。据我所知这样的系统目前只有intezer一家。</p>
+<p>第5章：共享代码识别，这个其实是很有用的一个功能。比如为什么说VPNFilter与BlackEnergy有关，因为它们都用了相同的方式去修改RC4算法进行加密，如果在分析的时候有这样一个共享代码识别的系统，样本扔进去就跑出来识别出共享了BlackEnergy的代码，能省很多精力和时间。这样的系统目前intezer有一个。</p>
 <p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-04-26/2019-04-26-03.png" alt=""></p>
 <p>这个是免费的，花钱可以有更多高级功能。</p>
 <p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-04-26/2019-04-26-04.png" alt=""></p>
 <p>书上说了有这么几个方法识别二进制文件共享代码：汇编指令，字符串，IAT表，动态API调用。我估计intezer大概主要也就是汇编指令和字符串。最后基于字符串做了一个简单的命令行查询系统。</p>
 <p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-04-26/2019-04-26-05.png" alt=""></p>
+<p>还有一个开源的IDA插件Kam1n0，是2015年IDA插件大赛的第二名：<a href="https://github.com/McGill-DMaS/Kam1n0-Community" target="_blank" rel="noopener">https://github.com/McGill-DMaS/Kam1n0-Community</a></p>
+<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-05-14/2019-05-14-01.png" alt=""></p>
 <p>第6章：扯了一些机器学习的概念。介绍了机器学习的步骤，特征空间和决策边界概念，模型的过拟合和欠拟合问题，和几个机器学习的算法：逻辑回归，KNN，决策树和随机森林。</p>
 <p>第7章：扯了一些机器学习的评价指标。TP、TN、FP、FN，ROC，Precision，TPR，FPR等等。懂机器学习的话，这两章可以直接跳过。</p>
 <p>第8章：先用是否被加密和压缩这两个指标作为特征，决策树作为算法写了一个判定恶意文件和正常文件的很简单的示例代码。然后实现了一个更接近实际用的，提取字符串作为特征，随机森林作为算法。</p>
