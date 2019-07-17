@@ -96,12 +96,12 @@
 
 
 
-  <meta name="description" content="关于如何给linux内核提交代码这个问题其实有官方的非常详细的文档，网上也有很多文章。但是这些文档要么就是太长读不下去或要么就是缺乏关键步骤。因为给linux内核提交代码不是在github上pull一个request就完事了，你想想代码那么多，大家天天去pull request人家Linus Torvalds也看不过来。linux内核每个模块的代码是有不同的人负责的，我们想要提交代码需要把patc">
+  <meta name="description" content="关于如何给linux内核提交代码这个问题其实有官方的非常详细的文档，网上也有很多文章。但是这些文档要么就是太长读不下去要么就是缺乏关键步骤。因为给linux内核提交代码不是在github上pull一个request就完事了，你想想代码那么多，大家天天去pull request人家Linus Torvalds也看不过来。linux内核每个模块的代码是有不同的人负责的，我们想要提交代码需要把patch">
 <meta property="og:type" content="article">
 <meta property="og:title" content="给linux内核提交代码">
 <meta property="og:url" content="http://yoursite.com/2019/07/15/给linux内核提交代码/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="关于如何给linux内核提交代码这个问题其实有官方的非常详细的文档，网上也有很多文章。但是这些文档要么就是太长读不下去或要么就是缺乏关键步骤。因为给linux内核提交代码不是在github上pull一个request就完事了，你想想代码那么多，大家天天去pull request人家Linus Torvalds也看不过来。linux内核每个模块的代码是有不同的人负责的，我们想要提交代码需要把patc">
+<meta property="og:description" content="关于如何给linux内核提交代码这个问题其实有官方的非常详细的文档，网上也有很多文章。但是这些文档要么就是太长读不下去要么就是缺乏关键步骤。因为给linux内核提交代码不是在github上pull一个request就完事了，你想想代码那么多，大家天天去pull request人家Linus Torvalds也看不过来。linux内核每个模块的代码是有不同的人负责的，我们想要提交代码需要把patch">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-04.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-01.png">
@@ -114,10 +114,10 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-09.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-10.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-11.png">
-<meta property="og:updated_time" content="2019-07-16T03:35:11.126Z">
+<meta property="og:updated_time" content="2019-07-17T10:37:25.159Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="给linux内核提交代码">
-<meta name="twitter:description" content="关于如何给linux内核提交代码这个问题其实有官方的非常详细的文档，网上也有很多文章。但是这些文档要么就是太长读不下去或要么就是缺乏关键步骤。因为给linux内核提交代码不是在github上pull一个request就完事了，你想想代码那么多，大家天天去pull request人家Linus Torvalds也看不过来。linux内核每个模块的代码是有不同的人负责的，我们想要提交代码需要把patc">
+<meta name="twitter:description" content="关于如何给linux内核提交代码这个问题其实有官方的非常详细的文档，网上也有很多文章。但是这些文档要么就是太长读不下去要么就是缺乏关键步骤。因为给linux内核提交代码不是在github上pull一个request就完事了，你想想代码那么多，大家天天去pull request人家Linus Torvalds也看不过来。linux内核每个模块的代码是有不同的人负责的，我们想要提交代码需要把patch">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-04.png">
 
 
@@ -413,7 +413,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-07-16 11:35:11" itemprop="dateModified" datetime="2019-07-16T11:35:11+08:00">2019-07-16</time>
+                <time title="修改时间：2019-07-17 18:37:25" itemprop="dateModified" datetime="2019-07-17T18:37:25+08:00">2019-07-17</time>
               
             
           </span>
@@ -458,7 +458,7 @@
       
 
       
-        <p>关于如何给linux内核提交代码这个问题其实有官方的非常详细的文档，网上也有很多文章。但是这些文档要么就是太长读不下去或要么就是缺乏关键步骤。因为给linux内核提交代码不是在github上pull一个request就完事了，你想想代码那么多，大家天天去pull request人家Linus Torvalds也看不过来。linux内核每个模块的代码是有不同的人负责的，我们想要提交代码需要把patch通过邮件发给对应的维护者。我第一次看如何给linux内核提交代码的官方文档时候看了下文章长度几乎都想放弃提交了。今天刚好看到一个觉得可以提交的点，所以做一下记录，希望我写的步骤尽量简洁。</p>
+        <p>关于如何给linux内核提交代码这个问题其实有官方的非常详细的文档，网上也有很多文章。但是这些文档要么就是太长读不下去要么就是缺乏关键步骤。因为给linux内核提交代码不是在github上pull一个request就完事了，你想想代码那么多，大家天天去pull request人家Linus Torvalds也看不过来。linux内核每个模块的代码是有不同的人负责的，我们想要提交代码需要把patch通过邮件发给对应的维护者。我第一次看如何给linux内核提交代码的官方文档时候看了下文章长度几乎都想放弃提交了。今天刚好看到一个觉得可以提交的点，所以做一下记录，希望我写的步骤尽量简洁。</p>
 <p>首先安装几个必要的软件：<code>sudo apt-get install esmtp mutt vim git</code></p>
 <p>vim和git就不用说了，esmtp是mstp的拓展，mutt是linux下收发邮件的程序。</p>
 <p>在home目录下创建下面几个配置文件。</p>
