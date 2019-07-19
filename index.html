@@ -15,7 +15,7 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-CN">
-<head><meta name="generator" content="Hexo 3.8.0">
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
@@ -161,7 +161,7 @@
 
 </head>
 
-<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
 
   
   
@@ -172,7 +172,7 @@
   page-home">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta">
     
@@ -333,20 +333,20 @@
 
   
 
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
   
   <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/15/给linux内核提交代码/">
 
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="Hexo">
     </span>
 
@@ -462,30 +462,30 @@
 <p>文件内容如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[user]</span><br><span class="line">   name = Your Name</span><br><span class="line">   email = your.email@example.com</span><br></pre></td></tr></table></figure>
 <p>如果你用的是gmail，在“设置”-&gt;“转发和 POP/IMAP”中勾选“启用 IMAP”并保存更改。</p>
-<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-04.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-04.png" alt></p>
 <p>需要注意的是这些配置文件中应该用相同的邮箱和姓名，姓名最好填自己的真实姓名，不要填一个奇奇怪怪的。然后我们把内核代码clone下来。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git</span><br></pre></td></tr></table></figure>
 <p>备份原来的文件，修改，生成patch。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">SRCTREE= linux</span><br><span class="line">MYFILE=  drivers/net/mydriver.c</span><br><span class="line"></span><br><span class="line">cd $SRCTREE</span><br><span class="line">cp $MYFILE $MYFILE.orig</span><br><span class="line">vi $MYFILE      # make your change</span><br><span class="line">cd ..</span><br><span class="line">diff -up $SRCTREE/$MYFILE&#123;.orig,&#125; &gt; /tmp/patch</span><br></pre></td></tr></table></figure>
 <p>用<code>git status</code>命令查看改变了哪些文件。</p>
-<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-01.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-01.png" alt></p>
 <p>用<code>git diff</code>命令查看具体修改的内容。</p>
-<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-02.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-02.png" alt></p>
 <p>用<code>git add</code>命令将要提交的文件的信息添加到索引库中。如果再运行<code>git diff</code>命令就看不到之前修改的文件了。运行<code>git status</code>命令可以看到提示信息由<code>Changes not staged for commit</code>变成了<code>Changes to be committed</code>，文件名也由红色变成了绿色。</p>
-<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-03.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-03.png" alt></p>
 <p>如果此时想放弃这次修改，可以使用<code>git reset &lt;file&gt;</code>移除已经添加到索引库中的改变。使用<code>git commit -s -v</code>命令提交我们的修改，此时会添加<code>Signed-off-by:</code>这一行。然后我们需要写清楚为什么要这么改。第一行写上”更改的子模块”+”: “+”简要描述修改的内容”。然后接下来再详细描述。</p>
-<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-05.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-05.png" alt></p>
 <p>使用<code>git show HEAD</code>命令查看我们的commit。使用<code>git format-patch -o /tmp/ HEAD^</code>生成patch。</p>
-<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-06.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-06.png" alt></p>
 <p>检查下有无格式错误。</p>
-<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-07.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-07.png" alt></p>
 <p>看看应该发邮件给谁。</p>
-<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-08.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-08.png" alt></p>
 <p>前两个maintainer是收件人，需要抄送给open list。我们最好先给自己发一封邮件再次确认一切无误。</p>
-<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-09.png" alt=""></p>
-<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-10.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-09.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-10.png" alt></p>
 <p>好了，现在可以发邮件了。之后就是等待给我们回复，可能会接受我们的commit，可能会拒绝我们的commit，可能会要求我们再修改，这都很正常。接受我们的commit之后还需要等一段时间才会被加入内核代码。到时候你会还收到邮件。比如我的commit是6月19日被接受的，7月2日被加到4.14/4.19/5.1-stable tree中。</p>
-<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-11.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-11.png" alt></p>
 <p>如果你用的不是gmail或者不想用mutt一些步骤可能会不太一样。建议参考下面两份官方文档。</p>
 <p>1.<a href="https://kernelnewbies.org/FirstKernelPatch" target="_blank" rel="noopener">FirstKernelPatch</a></p>
 <p>2.<a href="https://www.kernel.org/doc/html/v4.18/process/submitting-patches.html" target="_blank" rel="noopener">Submitting patches: the essential guide to getting your code into the kernel</a></p>
@@ -540,20 +540,20 @@
 
   
 
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
   
   <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/26/读《Malware Data Science》/">
 
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="Hexo">
     </span>
 
@@ -658,36 +658,36 @@
 <p>《Malware Data Science》这本书读之前我的期望比较高，虽然我没打算深入做这个方向，但是现在太多关于病毒分析的书了，写来写去都是那些东西，有这么一本从数据科学的角度讲病毒分析的书感觉很难得。但是大致读完之后，还是有点失望。满分100分只能打个60分，个人觉得属于读不读都可以的那种。</p>
 <p>这本书一共有12章，第1章是介绍，第2章是静态分析，第3章是动态分析，可以直接跳过。下面重点说第4章到第12章。</p>
 <p>第4章：教你怎么画图来识别攻击活动。书上举的两个例子一是把相同CC的样本连在一起，二是把含有相同图片的样本连在一起，分别用的APT1和木马样本。大概效果像下面这样。</p>
-<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-04-26/2019-04-26-01.png" alt=""></p>
-<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-04-26/2019-04-26-02.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-04-26/2019-04-26-01.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-04-26/2019-04-26-02.png" alt></p>
 <p>大家都懂的，想看的话就别指望国内出翻译版了。</p>
 <p>这种系统首先就是大名鼎鼎的virustotal的VTgraph了，virustotal官方还出了个virustotal的教程：<a href="https://storage.googleapis.com/vt-gtm-wp-media/virustotal-for-investigators.pdf" target="_blank" rel="noopener">https://storage.googleapis.com/vt-gtm-wp-media/virustotal-for-investigators.pdf</a></p>
-<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-05-05/2019-05-05-02.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-05-05/2019-05-05-02.png" alt></p>
 <p>国内这样的系统还有腾讯的安图，前几天它们一篇文章中判断今年几个影响恶劣的病毒团伙背后是同一个犯罪组织：<a href="https://mp.weixin.qq.com/s/tmNYp1WHtUxYRE3aRQNUeA" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/tmNYp1WHtUxYRE3aRQNUeA</a></p>
-<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-05-05/2019-05-05-01.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-05-05/2019-05-05-01.png" alt></p>
 <p>当然还有360网络研究院大数据关联平台和360威胁情报中心(现更名为奇安信威胁情报中心)威胁分析平台：<a href="https://ti.360.net/blog/articles/apt-c-27-(goldmouse):-suspected-target-attack-against-the-middle-east-with-winrar-exploit/" target="_blank" rel="noopener">https://ti.360.net/blog/articles/apt-c-27-(goldmouse):-suspected-target-attack-against-the-middle-east-with-winrar-exploit/</a></p>
-<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-05-05/2019-05-05-04.png" alt=""></p>
-<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-05-05/2019-05-05-03.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-05-05/2019-05-05-04.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-05-05/2019-05-05-03.png" alt></p>
 <p>还有微步在线等平台，就不一一列举了。</p>
 <p>第5章：共享代码识别，这个其实是很有用的一个功能。比如为什么说VPNFilter与BlackEnergy有关，因为它们都用了相同的方式去修改RC4算法进行加密，如果在分析的时候有这样一个共享代码识别的系统，样本扔进去就跑出来识别出共享了BlackEnergy的代码，能省很多精力和时间。这样的系统目前intezer有一个。</p>
-<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-04-26/2019-04-26-03.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-04-26/2019-04-26-03.png" alt></p>
 <p>这个是免费的，花钱可以有更多高级功能。</p>
-<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-04-26/2019-04-26-04.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-04-26/2019-04-26-04.png" alt></p>
 <p>书上说了有这么几个方法识别二进制文件共享代码：汇编指令，字符串，IAT表，动态API调用。我估计intezer大概主要也就是汇编指令和字符串。最后基于字符串做了一个简单的命令行查询系统。</p>
-<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-04-26/2019-04-26-05.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-04-26/2019-04-26-05.png" alt></p>
 <p>还有一个开源的IDA插件Kam1n0，是2015年IDA插件大赛的第二名：<a href="https://github.com/McGill-DMaS/Kam1n0-Community" target="_blank" rel="noopener">https://github.com/McGill-DMaS/Kam1n0-Community</a></p>
-<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-05-14/2019-05-14-01.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-05-14/2019-05-14-01.png" alt></p>
 <p>第6章：扯了一些机器学习的概念。介绍了机器学习的步骤，特征空间和决策边界概念，模型的过拟合和欠拟合问题，和几个机器学习的算法：逻辑回归，KNN，决策树和随机森林。</p>
 <p>第7章：扯了一些机器学习的评价指标。TP、TN、FP、FN，ROC，Precision，TPR，FPR等等。懂机器学习的话，这两章可以直接跳过。</p>
 <p>第8章：先用是否被加密和压缩这两个指标作为特征，决策树作为算法写了一个判定恶意文件和正常文件的很简单的示例代码。然后实现了一个更接近实际用的，提取字符串作为特征，随机森林作为算法。</p>
 <p>第9章：可视化，教你怎么画一些比较高大上的图，随便截了几张。</p>
-<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-04-26/2019-04-26-06.png" alt=""><br><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-04-26/2019-04-26-07.png" alt=""><br><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-04-26/2019-04-26-08.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-04-26/2019-04-26-06.png" alt><br><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-04-26/2019-04-26-07.png" alt><br><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-04-26/2019-04-26-08.png" alt></p>
 <p>第10章：扯了一些深度学习的概念。神经网络原理是什么，怎么训练神经网络，最后介绍了几种神经网络：前向神经网络，卷积神经网络，自编码神经网络，生成对抗网络，循环神经网络和残差网络。懂的话也可以直接跳过。</p>
 <p>第11章：用神经网络检测恶意HTML页面。</p>
 <p>第12章：怎么成为一个数据科学家，随便扯扯。</p>
 <p>数据科学用于病毒分析当然能做很多有趣的事情。但是打60分的原因是觉得翻翻还是可以，例子都太简单了，机器学习/深度学习这种玄学类的东西，举那么简单的例子基本等于没有举，真正用于实践会遇到很多问题。</p>
 <p>其实我是买了书的，但是纸质看起来不太方便，又找了好久才找到pdf，想看看这本书又找不到pdf的话：aG91amluZ3lpMTU5。</p>
-<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-04-26/2019-04-26-09.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-04-26/2019-04-26-09.png" alt></p>
 
           
         
@@ -739,20 +739,20 @@
 
   
 
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
   
   <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/13/个人博客正式上线/">
 
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="Hexo">
     </span>
 
@@ -978,9 +978,9 @@
 
       <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
-              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-author-name" itemprop="name">John Doe</p>
               <div class="site-description motion-element" itemprop="description"></div>
           </div>
 
@@ -1041,7 +1041,7 @@
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder"></span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
 
   
 
@@ -1049,7 +1049,7 @@
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
 
 
 
