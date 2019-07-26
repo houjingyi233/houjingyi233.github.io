@@ -93,17 +93,17 @@
   };
 </script>
 
-  <meta name="description" content="对文章有问题或者想交个朋友(加好友请备注说明来意):wx(aG91amluZ3lpMTU5)">
+  <meta name="description" content="对文章有问题或者想交个朋友(加好友请备注说明来意):wx(aG91amluZ3lpMTU5) 友情链接： 知道创宇未来CTO：https://blog.th3wind.xyz/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="关于">
 <meta property="og:url" content="http://yoursite.com/about/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="对文章有问题或者想交个朋友(加好友请备注说明来意):wx(aG91amluZ3lpMTU5)">
+<meta property="og:description" content="对文章有问题或者想交个朋友(加好友请备注说明来意):wx(aG91amluZ3lpMTU5) 友情链接： 知道创宇未来CTO：https://blog.th3wind.xyz/">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-06-26T04:39:03.683Z">
+<meta property="og:updated_time" content="2019-07-26T08:15:25.173Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于">
-<meta name="twitter:description" content="对文章有问题或者想交个朋友(加好友请备注说明来意):wx(aG91amluZ3lpMTU5)">
+<meta name="twitter:description" content="对文章有问题或者想交个朋友(加好友请备注说明来意):wx(aG91amluZ3lpMTU5) 友情链接： 知道创宇未来CTO：https://blog.th3wind.xyz/">
 
 
 
@@ -224,6 +224,22 @@
         
         
           
+          <li class="menu-item menu-item-about menu-item-active">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
           <li class="menu-item menu-item-archives">
 
     
@@ -246,6 +262,9 @@
     
 
     
+    
+      
+      
     
       
       
@@ -306,6 +325,8 @@
         
         
           <p>对文章有问题或者想交个朋友(加好友请备注说明来意):wx(aG91amluZ3lpMTU5)</p>
+<p>友情链接：</p>
+<p>知道创宇未来CTO：<a href="https://blog.th3wind.xyz/" target="_blank" rel="noopener">https://blog.th3wind.xyz/</a></p>
 
         
       </div>
@@ -544,6 +565,74 @@
 
 
   
+  
+  <script>
+    
+    function showTime(Counter) {
+      var entries = [];
+      var $visitors = $('.leancloud_visitors');
+
+      $visitors.each(function() {
+        entries.push( $(this).attr('id').trim() );
+      });
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url: { '$in': entries } }) })
+        .done(function({ results }) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if (countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function ({ responseJSON }) {
+          console.log('LeanCloud Counter Error: ' + responseJSON.code + ' ' + responseJSON.error);
+        });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + 'iE22CiK8o1c5ne7YHXiFuaIc-gzGzoHsz')
+        .done(function({ api_server }) {
+          var Counter = function(method, url, data) {
+            return $.ajax({
+              method: method,
+              url: 'https://' + api_server + '/1.1' + url,
+              headers: {
+                'X-LC-Id': 'iE22CiK8o1c5ne7YHXiFuaIc-gzGzoHsz',
+                'X-LC-Key': 'ElFC2G57tO7Uycx99MJMYQc3',
+                'Content-Type': 'application/json',
+              },
+              data: data
+            });
+          };
+          
+            if ($('.post-title-link').length >= 1) {
+              showTime(Counter);
+            }
+          
+        });
+    });
+  </script>
+
+
 
   
 
