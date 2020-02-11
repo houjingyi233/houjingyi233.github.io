@@ -422,20 +422,26 @@
 <p>在home目录下创建下面几个配置文件。</p>
 <p>.muttrc</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">set sendmail=&quot;/usr/bin/esmtp&quot;</span><br><span class="line">set envelope_from=yes</span><br><span class="line">set from=&quot;Your Name &lt;my.email@gmail.com&gt;&quot;</span><br><span class="line">set use_from=yes</span><br><span class="line">set edit_headers=yes</span><br></pre></td></tr></table></figure>
+
 <p>.esmtprc</p>
 <p>设置文件权限：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod g-rwx ~/.esmtprc</span><br><span class="line">chmod o-rwx ~/.esmtprc</span><br></pre></td></tr></table></figure>
+
 <p>文件内容如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">identity &quot;my.email@gmail.com&quot;</span><br><span class="line">hostname smtp.gmail.com:587</span><br><span class="line">username &quot;my.email@gmail.com&quot;</span><br><span class="line">password &quot;ThisIsNotARealPassWord&quot;</span><br><span class="line">starttls required</span><br></pre></td></tr></table></figure>
+
 <p>.gitconfig</p>
 <p>文件内容如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[user]</span><br><span class="line">   name = Your Name</span><br><span class="line">   email = your.email@example.com</span><br></pre></td></tr></table></figure>
+
 <p>如果你用的是gmail，在“设置”-&gt;“转发和 POP/IMAP”中勾选“启用 IMAP”并保存更改。</p>
 <p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-04.png" alt></p>
 <p>需要注意的是这些配置文件中应该用相同的邮箱和姓名，姓名最好填自己的真实姓名，不要填一个奇奇怪怪的。然后我们把内核代码clone下来。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git</span><br></pre></td></tr></table></figure>
+
 <p>备份原来的文件，修改，生成patch。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">SRCTREE= linux</span><br><span class="line">MYFILE=  drivers/net/mydriver.c</span><br><span class="line"></span><br><span class="line">cd $SRCTREE</span><br><span class="line">cp $MYFILE $MYFILE.orig</span><br><span class="line">vi $MYFILE      # make your change</span><br><span class="line">cd ..</span><br><span class="line">diff -up $SRCTREE/$MYFILE&#123;.orig,&#125; &gt; /tmp/patch</span><br></pre></td></tr></table></figure>
+
 <p>用<code>git status</code>命令查看改变了哪些文件。</p>
 <p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2019-07-15/2019-07-15-01.png" alt></p>
 <p>用<code>git diff</code>命令查看具体修改的内容。</p>
