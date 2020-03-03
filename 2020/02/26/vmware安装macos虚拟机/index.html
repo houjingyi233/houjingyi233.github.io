@@ -31,7 +31,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2020-02-26/2020-02-26-03.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2020-02-26/2020-02-26-02.png">
 <meta property="article:published_time" content="2020-02-26T08:37:04.086Z">
-<meta property="article:modified_time" content="2020-02-26T08:44:47.990Z">
+<meta property="article:modified_time" content="2020-03-03T03:54:25.197Z">
 <meta property="article:author" content="houjingyi">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2020-02-26/2020-02-26-01.png">
@@ -179,10 +179,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-02-26 16:37:04 / 修改时间：16:44:47" itemprop="dateCreated datePublished" datetime="2020-02-26T16:37:04+08:00">2020-02-26</time>
+              <time title="创建时间：2020-02-26 16:37:04" itemprop="dateCreated datePublished" datetime="2020-02-26T16:37:04+08:00">2020-02-26</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-03-03 11:54:25" itemprop="dateModified" datetime="2020-03-03T11:54:25+08:00">2020-03-03</time>
+              </span>
 
           
 
@@ -196,7 +202,7 @@
 
       
         <p>最近也在慢慢开始接触一些macos/ios安全，首先肯定是需要macos虚拟机的。当然自己是有一台mac，但是那台mac想留在家里用，在公司如果能用我windows的本子装个macos虚拟机上班的时候也可以研究macos/ios安全岂不美哉。关于如何用vmware workstation pro安装macos虚拟机其实也已经有很多教程，不过我还是觉得有必要记录一下，因为一些工具和步骤还是有变化的。</p>
-<p>目前主要有两种方式搭建macos虚拟机：<br>1.在macos物理机上能够使用vmware fusion/virtualbox或者vagrant搭建macos虚拟机，说起来倒是很简单：用vmware fusion应该不会有什么坑，用virtualbox也有人把要踩的坑总结好了：<a href="https://github.com/AlexanderWillner/runMacOSinVirtualBox" target="_blank" rel="noopener">Run macOS 10.15 Catalina (and other versions) in VirtualBox on macOS</a>。用vagrant参考<a href="https://www.freebuf.com/articles/terminal/151326.html" target="_blank" rel="noopener">偏执的iOS逆向研究员：收集全版本的macOS iOS+越狱+内核调试</a>这篇文章即可。比较麻烦的是如果用vmware fusion/virtualbox的话sb苹果是不提供完整系统镜像的，得你自己费劲去找；用vagrant的话又因为大家都知道的原因你得有一个很稳的梯子下那十几个G的镜像文件。<br>2.在linux/windows物理机上因为版权的原因默认是没有合法的手段让你装macos虚拟机的，最最最常见的方法就是用unlocker patch掉vmware workstation pro然后安装macos。推荐使用这个branch的unlocker：<a href="https://github.com/BDisp/unlocker/releases" target="_blank" rel="noopener">https://github.com/BDisp/unlocker/releases</a>，当前最新的版本是3.0.3。这个branch的unlocker据我测试应该是能直接用不会有什么坑。不过这里还是要注意一个问题，unlocker中的gettools.exe会去下载com.vmware.fusion.zip.tar并且下载速度很慢，我们可以先去把这个包下好，下载的地址是到<a href="http://softwareupdate.vmware.com/cds/vmw-desktop/fusion" target="_blank" rel="noopener">http://softwareupdate.vmware.com/cds/vmw-desktop/fusion</a>找你用的vmware workstation pro对应的版本即可。更改gettool.py的代码，把下载com.vmware.fusion.zip.tar的代码注释掉，用pyinstaller重新打包一个gettools.exe。以管理员权限运行win-install.cmd，在time.sleep(20)的时候把下载好的com.vmware.fusion.zip.tar拷贝进tools目录即可。</p>
+<p>目前主要有两种方式搭建macos虚拟机：<br>1.在macos物理机上能够使用vmware fusion/virtualbox或者vagrant搭建macos虚拟机，说起来倒是很简单：用vmware fusion应该不会有什么坑，用virtualbox也有人把要踩的坑总结好了：<a href="https://github.com/AlexanderWillner/runMacOSinVirtualBox" target="_blank" rel="noopener">Run macOS 10.15 Catalina (and other versions) in VirtualBox on macOS</a>。用vagrant参考<a href="https://www.freebuf.com/articles/terminal/151326.html" target="_blank" rel="noopener">偏执的iOS逆向研究员：收集全版本的macOS iOS+越狱+内核调试</a>这篇文章即可。比较麻烦的是如果用vmware fusion/virtualbox的话sb苹果是不提供完整系统镜像的，得自己找；用vagrant的话又因为大家都知道的原因你得有一个很稳的梯子下那十几个G的镜像文件。<br>2.在linux/windows物理机上因为版权的原因默认是没有合法的手段让你装macos虚拟机的，最最最常见的方法就是用unlocker patch掉vmware workstation pro然后安装macos，当然镜像还是得自己找。推荐使用这个branch的unlocker：<a href="https://github.com/BDisp/unlocker/releases" target="_blank" rel="noopener">https://github.com/BDisp/unlocker/releases</a>，当前最新的版本是3.0.3。这个branch的unlocker据我测试应该是能直接用不会有什么坑。不过这里还是要注意一个问题，unlocker中的gettools.exe会去下载com.vmware.fusion.zip.tar并且下载速度很慢，我们可以先去把这个包下好，下载的地址是到<a href="http://softwareupdate.vmware.com/cds/vmw-desktop/fusion" target="_blank" rel="noopener">http://softwareupdate.vmware.com/cds/vmw-desktop/fusion</a>找你用的vmware workstation pro对应的版本即可。更改gettool.py的代码，把下载com.vmware.fusion.zip.tar的代码注释掉，用pyinstaller重新打包一个gettools.exe。以管理员权限运行win-install.cmd，在time.sleep(20)的时候把下载好的com.vmware.fusion.zip.tar拷贝进tools目录即可。</p>
 <p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2020-02-26/2020-02-26-01.png" alt=""></p>
 <p>接下来就可以安装macos了，这里我用的镜像是Yosemite Install(14C109)10.10.2懒人版.cdr，如果提示你”没有足够的空间来进行安装”按照网上的方法抹掉vmware的硬盘即可：<a href="https://blog.csdn.net/wzl19870309/article/details/71194389" target="_blank" rel="noopener">OS X Base System 上没有足够的空间来进行安装</a>。除此之外我没有遇到任何问题。</p>
 <p><img src="https://raw.githubusercontent.com/houjingyi233/Screenshots/master/2020-02-26/2020-02-26-03.png" alt=""></p>
