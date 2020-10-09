@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Speaking of dll hijacking, many people may think that this is a very useless. However, I noticed researchers disclosured some special dll hijacking scenarios that can lead to LPE and even RCE. Some ti">
+<meta property="og:type" content="article">
+<meta property="og:title" content="new dll hijacking scenario found by accident">
+<meta property="og:url" content="http://yoursite.com/2020/10/09/new-dll-hijacking-scenario-found-by-accident/index.html">
+<meta property="og:site_name" content="houjingyi">
+<meta property="og:description" content="Speaking of dll hijacking, many people may think that this is a very useless. However, I noticed researchers disclosured some special dll hijacking scenarios that can lead to LPE and even RCE. Some ti">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s1.ax1x.com/2020/10/09/0DeJUJ.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/10/09/0De28I.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/10/09/0DusVU.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/10/09/0DKlW9.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/10/09/0DQdxA.png">
+<meta property="article:published_time" content="2020-10-09T01:45:49.014Z">
+<meta property="article:modified_time" content="2020-10-09T04:14:23.647Z">
+<meta property="article:author" content="houjingyi">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/10/09/0DeJUJ.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/10/09/new-dll-hijacking-scenario-found-by-accident/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>new dll hijacking scenario found by accident | houjingyi</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">houjingyi</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/09/new-dll-hijacking-scenario-found-by-accident/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="houjingyi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="houjingyi">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          new dll hijacking scenario found by accident
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-10-09 09:45:49 / 修改时间：12:14:23" itemprop="dateCreated datePublished" datetime="2020-10-09T09:45:49+08:00">2020-10-09</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Speaking of dll hijacking, many people may think that this is a very useless. However, I noticed researchers disclosured some special dll hijacking scenarios that can lead to LPE and even RCE. Some times ago, I accidentally discovered vulnerability in dll loading mechanism in cisco webex teams that can lead to LPE, and as far as I know, no one has ever mentioned this kind of dll hijacking scenario before.</p>
+<p><img src="https://s1.ax1x.com/2020/10/09/0DeJUJ.png" alt=""></p>
+<p><img src="https://s1.ax1x.com/2020/10/09/0De28I.md.png" alt=""></p>
+<p><a href="https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-webex-teams-dll-drsnH5AN" target="_blank" rel="noopener">Cisco Webex Teams Client for Windows DLL Hijacking Vulnerability</a></p>
+<p>After install cisco webex teams I found it was installed to “C:\Users\username\AppData\Local\CiscoSpark” and I decided to take a look at current_log.txt。</p>
+<p><img src="https://s1.ax1x.com/2020/10/09/0DusVU.png" alt=""></p>
+<p>It seems that several dlls were not loaded successfully the first time. This is very strange, CiscoCollabHost.exe wants to load these dlls from “dependencies”, error code 126 means “The specified module could not be found”, but “dependencies” and CiscoCollabHost.exe are in the same directory, and in “dependencies” these dlls exist. So something must be wrong…</p>
+<p>Until I found the corresponding code in spark-windows-media.dll in IDA, and it took some time before I realized what was going on.</p>
+<p><img src="https://s1.ax1x.com/2020/10/09/0DKlW9.png" alt=""></p>
+<p>In AddDllDirectory documentation says that the parameter should be “An absolute path to the directory to add to the search path”. However, Microsoft did not say you cannot use relative path, nor did they say what would happen if you use it. What’s even more interesting is that if you use a relative path like L”\\dependencies” like here, in fact windows will treat it as “C:\dependencies”!</p>
+<p>We can write code like:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">PCWSTR pcwstr = <span class="string">L"\\dependencies"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(!AddDllDirectory(pcwstr))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"failed!\n"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">LoadLibraryExW(<span class="string">L"test.dll"</span>, <span class="number">0</span>, LOAD_LIBRARY_SEARCH_DEFAULT_DIRS);</span><br><span class="line"></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"Hello World!\n"</span>;</span><br></pre></td></tr></table></figure>
+<p>Compile poc.exe, then put poc.exe into C:\example\poc.exe, if C:\dependencies\test.dll and C:\example\dependencies\test.dll both exist, poc.exe will load C:\dependencies\test.dll.</p>
+<p>So it is very simple to exploit this vulnerability here, just put wmeclient.dll into C:\dependencies\wmeclient.dll. After the victim opens cisco webex teams and successfully logs in, this wmeclient.dll will be loaded and executed by cisco webex teams. Directly writing PE files to C:\ requires administrator rights, but creating a directory in C:\ and then writing PE files to that directory does not require administrator rights.</p>
+<p>Consider another situation where the exe and the dll are not in the same path. If C:\abc\def\poc.exe wants to load C:\abc\lib\test.dll, can we write code like LoadLibraryW(L”.. \\lib\\test.dll”)? This will also lead to vulnerabilities, because windows will treat “..\\lib\\test.dll” directly as “C:\lib\test.dll”. I found such code in another renowned manufacturer’s product. I reported this to them and I am still waiting for reply. I will add more details 90 days after my report or a security bulletin available.</p>
+<p>Not only the path related to load dll handled in this way by windows, functions like CreateProcess may also cause vulnerability if given a relative path. Because some products have both windows and linux versions, developers may mix the code of these two platforms. For example, if you write code like this:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">TCHAR szCmdLine[] = &#123;TEXT(<span class="string">"\\bin\\whoami"</span>)&#125;;</span><br><span class="line">STARTUPINFO si;</span><br><span class="line"><span class="built_in">memset</span>(&amp;si, <span class="number">0</span>, <span class="keyword">sizeof</span>(STARTUPINFO));</span><br><span class="line">si.cb = <span class="keyword">sizeof</span>(STARTUPINFO);</span><br><span class="line">si.dwFlags = STARTF_USESHOWWINDOW;</span><br><span class="line">si.wShowWindow = SW_SHOW;</span><br><span class="line">PROCESS_INFORMATION pi;</span><br><span class="line">    </span><br><span class="line">CreateProcess(<span class="literal">NULL</span>, szCmdLine, <span class="literal">NULL</span>, <span class="literal">NULL</span>, FALSE, <span class="number">0</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, &amp;si, &amp;pi);</span><br></pre></td></tr></table></figure>
+
+<p>Windows will add C:\ and .exe, which means put whoami.exe into C:\bin\whoami.exe and it will be executed. I found codes similar to this in cisco DCNM. They told me that this problem only exists on server 2019 and server 2019 is not an environment supported by DCNM by default, so no CVE for this:</p>
+<p><a href="https://bst.cloudapps.cisco.com/bugsearch/bug/CSCvv65124" target="_blank" rel="noopener">https://bst.cloudapps.cisco.com/bugsearch/bug/CSCvv65124</a></p>
+<p>I also reported my findings to MSRC, but MSRC said this is the default behavior. I am not surprised, if the default behavior is to let developers write vulnerable code, that’s fine.</p>
+<p><img src="https://s1.ax1x.com/2020/10/09/0DQdxA.png" alt=""></p>
+<p>I am sharing my discovery because I haven’t seen anyone mention these and similar vulnerability may exist in other products. At the same time, I want to remind developers should make sure that all your dlls are loaded correctly. I want to thank cisco PSIRT although they do not have a bug bounty program but I am still willing to report vulnerability to them. They are very professional and will give you feedback at every stage(received-confirmed-coordinate disclosure time-final public disclosure).</p>
+<p>timeline:</p>
+<p>2020-06-30: vulnerability found and reported to cisco PSIRT</p>
+<p>2020-07-01: cisco PSIRT assigned PSIRT-0447917012</p>
+<p>2020-07-10: cisco PSIRT was not able to reproduce this, more details provided</p>
+<p>2020-07-15: cisco PSIRT confirmed this vulnerability</p>
+<p>2020-08-05: cisco PSIRT informed that the vulnerability will be fixed in the new version released on August 27, and a security bulletin will be released on September 2</p>
+<p>2020-08-19: cisco PSIRT hopes to postpone the release of the security bulletin to October 7 to ensure that all users can upgrade to the unaffected version before public disclosure</p>
+<p>2020-10-07: cisco PSIRT released security bulletin</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/04/09/%E4%B8%80%E6%AC%A1%E7%BB%99%E7%88%B1%E5%A5%87%E8%89%BASRC%E6%8A%A5%E5%91%8A%E6%BC%8F%E6%B4%9E%E7%9A%84%E7%BB%8F%E5%8E%86/" rel="prev" title="一次给爱奇艺SRC报告漏洞的经历">
+      <i class="fa fa-chevron-left"></i> 一次给爱奇艺SRC报告漏洞的经历
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">houjingyi</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">houjingyi</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
