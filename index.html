@@ -175,7 +175,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-10-09 09:45:49 / 修改时间：12:16:02" itemprop="dateCreated datePublished" datetime="2020-10-09T09:45:49+08:00">2020-10-09</time>
+              <time title="创建时间：2020-10-09 09:45:49 / 修改时间：14:59:25" itemprop="dateCreated datePublished" datetime="2020-10-09T09:45:49+08:00">2020-10-09</time>
             </span>
 
           
@@ -193,7 +193,7 @@
 <p><img src="https://s1.ax1x.com/2020/10/09/0DeJUJ.png" alt=""></p>
 <p><img src="https://s1.ax1x.com/2020/10/09/0De28I.md.png" alt=""></p>
 <p><a href="https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-webex-teams-dll-drsnH5AN" target="_blank" rel="noopener">Cisco Webex Teams Client for Windows DLL Hijacking Vulnerability</a></p>
-<p>After install cisco webex teams I found it was installed to “C:\Users\username\AppData\Local\CiscoSpark” and I decided to take a look at current_log.txt。</p>
+<p>I found cisco webex teams was installed to “C:\Users\username\AppData\Local\CiscoSpark” and I decided to take a look at current_log.txt。</p>
 <p><img src="https://s1.ax1x.com/2020/10/09/0DusVU.png" alt=""></p>
 <p>It seems that several dlls were not loaded successfully the first time. This is very strange, CiscoCollabHost.exe wants to load these dlls from “dependencies”, error code 126 means “The specified module could not be found”, but “dependencies” and CiscoCollabHost.exe are in the same directory, and in “dependencies” these dlls exist. So something must be wrong…</p>
 <p>Until I found the corresponding code in spark-windows-media.dll in IDA, and it took some time before I realized what was going on.</p>
@@ -203,7 +203,7 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">PCWSTR pcwstr = <span class="string">L"\\dependencies"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(!AddDllDirectory(pcwstr))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"failed!\n"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">LoadLibraryExW(<span class="string">L"test.dll"</span>, <span class="number">0</span>, LOAD_LIBRARY_SEARCH_DEFAULT_DIRS);</span><br><span class="line"></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"Hello World!\n"</span>;</span><br></pre></td></tr></table></figure>
 <p>Compile poc.exe, then put poc.exe into C:\example\poc.exe, if C:\dependencies\test.dll and C:\example\dependencies\test.dll both exist, poc.exe will load C:\dependencies\test.dll.</p>
 <p>So it is very simple to exploit this vulnerability here, just put wmeclient.dll into C:\dependencies\wmeclient.dll. After the victim opens cisco webex teams and successfully logs in, this wmeclient.dll will be loaded and executed by cisco webex teams. Directly writing PE files to C:\ requires administrator rights, but creating a directory in C:\ and then writing PE files to that directory does not require administrator rights.</p>
-<p>Consider another situation where the exe and the dll are not in the same path. If C:\abc\def\poc.exe wants to load C:\abc\lib\test.dll, can we write code like LoadLibraryW(L”.. \\lib\\test.dll”)? This will also lead to vulnerabilities, because windows will treat “..\\lib\\test.dll” directly as “C:\lib\test.dll”. I found such code in another renowned manufacturer’s product. I reported this to them and I am still waiting for reply. I will add more details 90 days after my report or a security bulletin available.</p>
+<p>Consider another situation where the exe and the dll are not in the same path. If C:\abc\def\poc.exe wants to load C:\abc\lib\test.dll, can we write code like LoadLibraryW(L”.. \\lib\\test.dll”)? This will also lead to vulnerability, because windows will treat “..\\lib\\test.dll” directly as “C:\lib\test.dll”. I found such code in another renowned manufacturer’s product. I reported this to them and I am still waiting for reply. I will add more details 90 days after my report or a security bulletin available.</p>
 <p>Not only the path related to load dll handled in this way by windows, functions like CreateProcess may also cause vulnerability if given a relative path. Because some products have both windows and linux versions, developers may mix the code of these two platforms. For example, if you write code like this:</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">TCHAR szCmdLine[] = &#123;TEXT(<span class="string">"\\bin\\whoami"</span>)&#125;;</span><br><span class="line">STARTUPINFO si;</span><br><span class="line"><span class="built_in">memset</span>(&amp;si, <span class="number">0</span>, <span class="keyword">sizeof</span>(STARTUPINFO));</span><br><span class="line">si.cb = <span class="keyword">sizeof</span>(STARTUPINFO);</span><br><span class="line">si.dwFlags = STARTF_USESHOWWINDOW;</span><br><span class="line">si.wShowWindow = SW_SHOW;</span><br><span class="line">PROCESS_INFORMATION pi;</span><br><span class="line">    </span><br><span class="line">CreateProcess(<span class="literal">NULL</span>, szCmdLine, <span class="literal">NULL</span>, <span class="literal">NULL</span>, FALSE, <span class="number">0</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, &amp;si, &amp;pi);</span><br></pre></td></tr></table></figure>
 
@@ -211,14 +211,14 @@
 <p><a href="https://bst.cloudapps.cisco.com/bugsearch/bug/CSCvv65124" target="_blank" rel="noopener">https://bst.cloudapps.cisco.com/bugsearch/bug/CSCvv65124</a></p>
 <p>I also reported my findings to MSRC, but MSRC said this is the default behavior. I am not surprised, if the default behavior is to let developers write vulnerable code, that’s fine.</p>
 <p><img src="https://s1.ax1x.com/2020/10/09/0DQdxA.png" alt=""></p>
-<p>I am sharing my discovery because I haven’t seen anyone mention these and similar vulnerability may exist in other products. At the same time, I want to remind developers should make sure that all your dlls are loaded correctly. I want to thank cisco PSIRT although they do not have a bug bounty program but I am still willing to report vulnerability to them. They are very professional and will give you feedback at every stage(received-confirmed-coordinate disclosure time-final public disclosure).</p>
+<p>I am sharing my discovery because I haven’t seen anyone mention these and similar vulnerabilities may exist in other products. At the same time, I want to remind developers should make sure that all your dlls are loaded correctly. I want to thank cisco PSIRT although they do not have a bug bounty program but I am still willing to report vulnerability to them. They are very professional and will give you feedback at every stage(received-confirmed-coordinate disclosure time-final public disclosure).</p>
 <p>timeline:</p>
 <p>2020-06-30: vulnerability found and reported to cisco PSIRT</p>
 <p>2020-07-01: cisco PSIRT assigned PSIRT-0447917012</p>
 <p>2020-07-10: cisco PSIRT was not able to reproduce this, more details provided</p>
 <p>2020-07-15: cisco PSIRT confirmed this vulnerability</p>
-<p>2020-08-05: cisco PSIRT informed that the vulnerability will be fixed in the new version released on August 27, and a security bulletin will be released on September 2</p>
-<p>2020-08-19: cisco PSIRT hopes to postpone the release of the security bulletin to October 7 to ensure that all users can upgrade to the unaffected version before public disclosure</p>
+<p>2020-08-05: cisco PSIRT informed that the vulnerability will be fixed in the new version released on August 27, and security bulletin will be released on September 2</p>
+<p>2020-08-19: cisco PSIRT hoped to postpone the release of security bulletin to October 7 to ensure that all users can upgrade to the unaffected version before public disclosure</p>
 <p>2020-10-07: cisco PSIRT released security bulletin</p>
 
       
