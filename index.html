@@ -240,101 +240,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/09/new-dll-hijacking-scenario-found-by-accident/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="houjingyi">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="houjingyi">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/10/09/new-dll-hijacking-scenario-found-by-accident/" class="post-title-link" itemprop="url">new dll hijacking scenario found by accident</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-10-09 09:45:49" itemprop="dateCreated datePublished" datetime="2020-10-09T09:45:49+08:00">2020-10-09</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-10-10 09:53:19" itemprop="dateModified" datetime="2020-10-10T09:53:19+08:00">2020-10-10</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Speaking of dll hijacking, many people may think it is very useless. However, I noticed researchers disclosured some special dll hijacking scenarios that can lead to LPE and even RCE. Some times ago, I accidentally discovered vulnerability in dll loading mechanism in cisco webex teams that can lead to LPE, and as far as I know, no one has ever mentioned this kind of dll hijacking scenario before.</p>
-<p><img src="https://s1.ax1x.com/2020/10/09/0DeJUJ.png" alt=""></p>
-<p><img src="https://s1.ax1x.com/2020/10/09/0De28I.md.png" alt=""></p>
-<p><a href="https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-webex-teams-dll-drsnH5AN" target="_blank" rel="noopener">Cisco Webex Teams Client for Windows DLL Hijacking Vulnerability</a></p>
-<p>I found cisco webex teams was installed to “C:\Users\username\AppData\Local\CiscoSpark” and I decided to take a look at current_log.txt。</p>
-<p><img src="https://s1.ax1x.com/2020/10/09/0DusVU.png" alt=""></p>
-<p>It seems that several dlls were not loaded successfully the first time. This is very strange, CiscoCollabHost.exe wants to load these dlls from “dependencies”, error code 126 means “The specified module could not be found”, but “dependencies” and CiscoCollabHost.exe are in the same directory, and in “dependencies” these dlls exist. So something must be wrong…</p>
-<p>Until I found the corresponding code in spark-windows-media.dll in IDA, and it took some time before I realized what was going on.</p>
-<p><img src="https://s1.ax1x.com/2020/10/09/0DKlW9.png" alt=""></p>
-<p>In AddDllDirectory documentation says that the parameter should be “An absolute path to the directory to add to the search path”. However, Microsoft did not say you cannot use relative path, nor did they say what would happen if you use it. What’s even more interesting is that if you use a relative path like L”\\dependencies” like here, in fact windows will treat it as “C:\dependencies”!</p>
-<p>We can write code like:</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">PCWSTR pcwstr = <span class="string">L"\\dependencies"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(!AddDllDirectory(pcwstr))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"failed!\n"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">LoadLibraryExW(<span class="string">L"test.dll"</span>, <span class="number">0</span>, LOAD_LIBRARY_SEARCH_DEFAULT_DIRS);</span><br><span class="line"></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"Hello World!\n"</span>;</span><br></pre></td></tr></table></figure>
-<p>Compile poc.exe, then put poc.exe into C:\example\poc.exe, if C:\dependencies\test.dll and C:\example\dependencies\test.dll both exist, poc.exe will load C:\dependencies\test.dll.</p>
-<p>So it is very simple to exploit this vulnerability here, just put wmeclient.dll into C:\dependencies\wmeclient.dll. After the victim opens cisco webex teams and successfully logs in, this wmeclient.dll will be loaded and executed by cisco webex teams. Directly writing PE files to C:\ requires administrator rights, but creating a directory in C:\ and then writing PE files to that directory does not require administrator rights.</p>
-<p>Consider another situation where the exe and the dll are not in the same path. If C:\abc\def\poc.exe wants to load C:\abc\lib\test.dll, can we write code like LoadLibraryW(L”.. \\lib\\test.dll”)? This will also lead to vulnerability, because windows will treat “..\\lib\\test.dll” directly as “C:\lib\test.dll”. I found such code in another renowned manufacturer’s product. I reported this to them and I am still waiting for reply. I will add more details 90 days after my report or a security bulletin available.</p>
-<p>Not only the path related to load dll handled in this way by windows, functions like CreateProcess may also cause vulnerability if given a relative path. Because some products have both windows and linux versions, developers may mix the code of these two platforms. For example, if you write code like this:</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">TCHAR szCmdLine[] = &#123;TEXT(<span class="string">"\\bin\\whoami"</span>)&#125;;</span><br><span class="line">STARTUPINFO si;</span><br><span class="line"><span class="built_in">memset</span>(&amp;si, <span class="number">0</span>, <span class="keyword">sizeof</span>(STARTUPINFO));</span><br><span class="line">si.cb = <span class="keyword">sizeof</span>(STARTUPINFO);</span><br><span class="line">si.dwFlags = STARTF_USESHOWWINDOW;</span><br><span class="line">si.wShowWindow = SW_SHOW;</span><br><span class="line">PROCESS_INFORMATION pi;</span><br><span class="line">    </span><br><span class="line">CreateProcess(<span class="literal">NULL</span>, szCmdLine, <span class="literal">NULL</span>, <span class="literal">NULL</span>, FALSE, <span class="number">0</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, &amp;si, &amp;pi);</span><br></pre></td></tr></table></figure>
-
-<p>Windows will add C:\ and .exe, which means put whoami.exe into C:\bin\whoami.exe and it will be executed. I found codes similar to this in cisco DCNM. They told me that this problem only exists on server 2019 and server 2019 is not an environment supported by DCNM by default, so no CVE for this:</p>
-<p><a href="https://bst.cloudapps.cisco.com/bugsearch/bug/CSCvv65124" target="_blank" rel="noopener">https://bst.cloudapps.cisco.com/bugsearch/bug/CSCvv65124</a></p>
-<p>I also reported my findings to MSRC, but MSRC said this is the default behavior. I am not surprised, if the default behavior is to let developers write vulnerable code, that’s fine.</p>
-<p><img src="https://s1.ax1x.com/2020/10/09/0DQdxA.png" alt=""></p>
-<p>I am sharing my discovery because I haven’t seen anyone mention these and similar vulnerabilities may exist in other products. At the same time, I want to remind developers should make sure that all your dlls are loaded correctly. I want to thank cisco PSIRT although they do not have a bug bounty program but I am still willing to report vulnerability to them. They are very professional and will give you feedback at every stage(received-confirmed-coordinate disclosure time-final public disclosure).</p>
-<p>timeline:</p>
-<p>2020-06-30: vulnerability found and reported to cisco PSIRT</p>
-<p>2020-07-01: cisco PSIRT assigned PSIRT-0447917012</p>
-<p>2020-07-10: cisco PSIRT was not able to reproduce this, more details provided</p>
-<p>2020-07-15: cisco PSIRT confirmed this vulnerability</p>
-<p>2020-08-05: cisco PSIRT informed that the vulnerability will be fixed in the new version released on August 27, and security bulletin will be released on September 2</p>
-<p>2020-08-19: cisco PSIRT hoped to postpone the release of security bulletin to October 7 to ensure that all users can upgrade to the unaffected version before public disclosure</p>
-<p>2020-10-07: cisco PSIRT released security bulletin</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/09/%E4%B8%80%E6%AC%A1%E7%BB%99%E7%88%B1%E5%A5%87%E8%89%BASRC%E6%8A%A5%E5%91%8A%E6%BC%8F%E6%B4%9E%E7%9A%84%E7%BB%8F%E5%8E%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -762,7 +667,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -790,7 +695,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
