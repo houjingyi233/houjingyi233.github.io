@@ -20,18 +20,18 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Speaking of dll hijacking, many people may think it is very useless.  Some times ago, I accidentally discovered vulnerability in dll loading mechanism in cisco webex teams&#x2F;IBM Db2&#x2F;VMware ThinApp that">
+  <meta name="description" content="Speaking of dll hijacking, many people may think it is very useless.  Some times ago, I accidentally discovered vulnerabilities in dll loading mechanism in cisco webex teams&#x2F;IBM Db2&#x2F;VMware ThinApp tha">
 <meta property="og:type" content="article">
 <meta property="og:title" content="new dll hijacking scenario found by accident">
 <meta property="og:url" content="http://yoursite.com/2021/01/14/new-dll-hijacking-scenario-found-by-accident/index.html">
 <meta property="og:site_name" content="houjingyi">
-<meta property="og:description" content="Speaking of dll hijacking, many people may think it is very useless.  Some times ago, I accidentally discovered vulnerability in dll loading mechanism in cisco webex teams&#x2F;IBM Db2&#x2F;VMware ThinApp that">
+<meta property="og:description" content="Speaking of dll hijacking, many people may think it is very useless.  Some times ago, I accidentally discovered vulnerabilities in dll loading mechanism in cisco webex teams&#x2F;IBM Db2&#x2F;VMware ThinApp tha">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://z3.ax1x.com/2021/07/16/WMWmcQ.png">
 <meta property="og:image" content="https://z3.ax1x.com/2021/07/16/WMfdxg.md.png">
 <meta property="og:image" content="https://s1.ax1x.com/2020/10/09/0DQdxA.png">
 <meta property="article:published_time" content="2021-01-14T01:55:12.970Z">
-<meta property="article:modified_time" content="2021-07-16T11:07:31.888Z">
+<meta property="article:modified_time" content="2021-07-16T11:14:29.941Z">
 <meta property="article:author" content="houjingyi">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://z3.ax1x.com/2021/07/16/WMWmcQ.png">
@@ -189,7 +189,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-07-16 19:07:31" itemprop="dateModified" datetime="2021-07-16T19:07:31+08:00">2021-07-16</time>
+                <time title="修改时间：2021-07-16 19:14:29" itemprop="dateModified" datetime="2021-07-16T19:14:29+08:00">2021-07-16</time>
               </span>
 
           
@@ -204,8 +204,8 @@
 
       
         <p>Speaking of dll hijacking, many people may think it is very useless. </p>
-<p>Some times ago, I accidentally discovered vulnerability in dll loading mechanism in cisco webex teams/IBM Db2/VMware ThinApp that can lead to LPE, and as far as I know, no one has ever mentioned this kind of dll hijacking scenario before.</p>
-<p>Vendor advisory:</p>
+<p>Some times ago, I accidentally discovered vulnerabilities in dll loading mechanism in cisco webex teams/IBM Db2/VMware ThinApp that can lead to LPE, and as far as I know, no one has ever mentioned this kind of dll hijacking scenario before.</p>
+<p>Vendor advisories:</p>
 <p><a href="https://www.vmware.com/security/advisories/VMSA-2021-0015.html" target="_blank" rel="noopener">VMware ThinApp update addresses a DLL hijacking vulnerability</a><br><a href="https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-webex-teams-dll-drsnH5AN" target="_blank" rel="noopener">Cisco Webex Teams Client for Windows DLL Hijacking Vulnerability</a><br><a href="https://www.ibm.com/support/pages/node/6370023" target="_blank" rel="noopener">Security Bulletin: IBM® Db2® could allow a local authenticated attacker to execute arbitrary code on the system, caused by DLL search order hijacking vulnerability in Microsoft Windows client. (CVE-2020-4739)</a></p>
 <p>Details I posted to full disclosure mailing list:</p>
 <p><a href="https://seclists.org/fulldisclosure/2021/Jul/35" target="_blank" rel="noopener">VMware ThinApp DLL hijacking vulnerability</a><br><a href="https://seclists.org/fulldisclosure/2021/Feb/73" target="_blank" rel="noopener">IBM(R) Db2(R) Windows client DLL Hijacking Vulnerability(0day)</a><br><a href="https://seclists.org/fulldisclosure/2020/Oct/16" target="_blank" rel="noopener">Cisco Webex Teams Client for Windows DLL Hijacking Vulnerability</a></p>
@@ -218,9 +218,9 @@
 
 <p>The process is:KernelBase!LoadLibraryExW-&gt;ntdll!LdrpLoadDll-&gt;ntdll!LdrpPreprocessDllName:</p>
 <p><img src="https://z3.ax1x.com/2021/07/16/WMWmcQ.png" alt=""></p>
-<p>So RtlDetermineDosPathNameType_Ustr will return 4 which means RtlPathTypeRooted and LdrpGetFulPath will return C:\DummyTLS\dummyTLS.dll. You can refer to code in ReactOS:<a href="https://github.com/mirror/reactos/blob/master/reactos/lib/rtl/path.c" target="_blank" rel="noopener">https://github.com/mirror/reactos/blob/master/reactos/lib/rtl/path.c</a>.</p>
+<p>So RtlDetermineDosPathNameType_Ustr will return 4(RtlPathTypeRooted) and LdrpGetFulPath will return C:\DummyTLS\dummyTLS.dll. You can refer to code in ReactOS:<a href="https://github.com/mirror/reactos/blob/master/reactos/lib/rtl/path.c" target="_blank" rel="noopener">https://github.com/mirror/reactos/blob/master/reactos/lib/rtl/path.c</a>.</p>
 <p><img src="https://z3.ax1x.com/2021/07/16/WMfdxg.md.png" alt=""></p>
-<p>So now we know Windows will treat relative path in LoadLibrary/AddDllDirectory… as the path rooted relative to the current disk designator, which is usually C:\. Since non-admin user can create directory under C:\ and write file to it, this cause LPE.</p>
+<p>So now we know Windows will treat relative path in LoadLibrary/AddDllDirectory…as the path rooted relative to the current disk designator, which is usually C:\. Since non-admin user can create directory under C:\ and write file to it, this cause LPE.</p>
 <p>I also reported my findings to MSRC, but MSRC said this is the default behavior. I am not surprised, if the default behavior is to let developers write vulnerable code, that’s fine.</p>
 <p><img src="https://s1.ax1x.com/2020/10/09/0DQdxA.png" alt=""></p>
 <p>I am sharing my discovery because I haven’t seen anyone mention these and similar vulnerabilities exist in other products absolutely. At the same time, I want to remind developers should make sure that all your dlls are loaded correctly.</p>
