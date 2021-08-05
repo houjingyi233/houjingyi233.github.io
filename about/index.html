@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="主要研究二进制，包括漏洞挖掘&#x2F;病毒分析&#x2F;加壳脱壳对文章有问题或者想交个朋友:wx(aG91amluZ3lpMTU5) 一部分CVE： apple : CVE-2020-27919 CVE-2021-1759 CVE-2021-1881 CVE-2021-30687 CVE-2021-30707 CVE-2021-30759 CVE-2021-30790bitdefender : CVE-2020-">
+<meta property="og:type" content="website">
+<meta property="og:title" content="关于">
+<meta property="og:url" content="http://yoursite.com/about/index.html">
+<meta property="og:site_name" content="houjingyi">
+<meta property="og:description" content="主要研究二进制，包括漏洞挖掘&#x2F;病毒分析&#x2F;加壳脱壳对文章有问题或者想交个朋友:wx(aG91amluZ3lpMTU5) 一部分CVE： apple : CVE-2020-27919 CVE-2021-1759 CVE-2021-1881 CVE-2021-30687 CVE-2021-30707 CVE-2021-30759 CVE-2021-30790bitdefender : CVE-2020-">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-05T01:47:49.327Z">
+<meta property="article:modified_time" content="2021-08-05T01:44:17.080Z">
+<meta property="article:author" content="houjingyi">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/about/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>关于 | houjingyi
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">houjingyi</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="zh-CN">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">关于
+</h1>
+
+<div class="post-meta">
+  
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <p>主要研究二进制，包括漏洞挖掘/病毒分析/加壳脱壳<br>对文章有问题或者想交个朋友:wx(aG91amluZ3lpMTU5)</p>
+<p>一部分CVE：</p>
+<p>apple : <a target="_blank" rel="noopener" href="https://support.apple.com/zh-cn/HT212011">CVE-2020-27919</a> <a target="_blank" rel="noopener" href="https://support.apple.com/zh-cn/HT212147">CVE-2021-1759</a> <a target="_blank" rel="noopener" href="https://support.apple.com/en-us/HT212325">CVE-2021-1881</a> <a target="_blank" rel="noopener" href="https://support.apple.com/en-us/HT212528">CVE-2021-30687</a> <a target="_blank" rel="noopener" href="https://support.apple.com/en-us/HT212528">CVE-2021-30707</a> <a target="_blank" rel="noopener" href="https://support.apple.com/en-us/HT212602">CVE-2021-30759</a> <a target="_blank" rel="noopener" href="https://support.apple.com/en-us/HT212602">CVE-2021-30790</a><br>bitdefender : <a target="_blank" rel="noopener" href="https://www.bitdefender.com/support/security-advisories/local-privilege-escalation-in-bitdefender-engines-va-8953">CVE-2020-15731</a><br>cisco : <a target="_blank" rel="noopener" href="https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20190703-jabber-dll">CVE-2019-1855</a> <a target="_blank" rel="noopener" href="https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-anyconnect-mac-dos-36s2y3Lv">CVE-2020-3432</a> <a target="_blank" rel="noopener" href="https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-webex-teams-dll-drsnH5AN">CVE-2020-3535</a> <a target="_blank" rel="noopener" href="https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-webex-teams-7ZMcXG99">CVE-2021-1242</a> <a target="_blank" rel="noopener" href="https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-amp-imm-dll-5PAZ3hRV">CVE-2021-1280</a><br>dell : <a target="_blank" rel="noopener" href="https://www.dell.com/support/article/SLN321789">CVE-2020-5358</a> <a target="_blank" rel="noopener" href="https://www.dell.com/support/article/SLN322456">CVE-2020-5385</a><br>HP : <a target="_blank" rel="noopener" href="https://support.hp.com/us-en/document/c06609927">CVE-2019-18919/CVE-2019-18920</a><br>IBM : <a target="_blank" rel="noopener" href="https://ibm.com/support/pages/node/6370023">CVE-2020-4739</a><br>intel : <a target="_blank" rel="noopener" href="https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00399.html">CVE-2020-12287</a><br>libreoffice : <a target="_blank" rel="noopener" href="https://www.libreoffice.org/about-us/security/advisories/cve-2021-25632/">CVE-2021-25632</a><br>mongodb : <a target="_blank" rel="noopener" href="https://jira.mongodb.org/browse/COMPASS-4510">CVE-2021-20334</a><br>nvidia : <a target="_blank" rel="noopener" href="https://nvidia.custhelp.com/app/answers/detail/a_id/5096">CVE‑2020‑5992</a><br>vmware : <a target="_blank" rel="noopener" href="https://blog.installbuilder.com/2020/08/updates-and-bug-fixes-with-version-2070.html">CVE-2020-3979</a> <a target="_blank" rel="noopener" href="https://www.vmware.com/security/advisories/VMSA-2021-0009.html">CVE-2021-21987</a> <a target="_blank" rel="noopener" href="https://www.vmware.com/security/advisories/VMSA-2021-0013.html">CVE-2021-21999</a> <a target="_blank" rel="noopener" href="https://www.vmware.com/security/advisories/VMSA-2021-0015.html">CVE-2021-22000</a></p>
+<p>有些时候我也会把一些发现的厂商拒绝修复的漏洞或者我觉得比较有趣的东西发到fulldisclosure：</p>
+<p><a target="_blank" rel="noopener" href="https://seclists.org/fulldisclosure/2021/Jul/35">VMware ThinApp DLL hijacking vulnerability</a><br><a target="_blank" rel="noopener" href="https://seclists.org/fulldisclosure/2021/Apr/8">python embedded program local arbitrary python script execution on windows</a><br><a target="_blank" rel="noopener" href="https://seclists.org/fulldisclosure/2021/Mar/76">PotPlayer denial of service vulnerability</a><br><a target="_blank" rel="noopener" href="https://seclists.org/fulldisclosure/2021/Feb/73">IBM(R) Db2(R) Windows client DLL Hijacking Vulnerability(0day)</a><br><a target="_blank" rel="noopener" href="https://seclists.org/fulldisclosure/2021/Feb/19">null pointer deference in mfmp4srcsnk.dll in latest windows 10</a><br><a target="_blank" rel="noopener" href="https://seclists.org/fulldisclosure/2020/Dec/43">remote code execution when open a project in android studio that google refused to fix(still 0day)</a><br><a target="_blank" rel="noopener" href="https://seclists.org/fulldisclosure/2020/Oct/16">Cisco Webex Teams Client for Windows DLL Hijacking Vulnerability</a></p>
+<p>hackerone平台报过的洞：<a target="_blank" rel="noopener" href="https://hackerone.com/hhjjyy">hackerone</a></p>
+<p>给国内厂商SRC报过的一些洞懒得写了</p>
+<p><strong>讲过的talk</strong></p>
+<p>XKungfoo2018:<a target="_blank" rel="noopener" href="http://img.4hou.com/wp-content/uploads/2018/05/6e1d77e660d4740dc9b7.pdf">2017年恶意代码威胁回顾和快速分析实践</a></p>
+<p><strong>CSDN博客</strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_32400847">houjingyi的博客</a></p>
+<p><strong>在安全客发表的文章</strong></p>
+<p><a target="_blank" rel="noopener" href="https://www.anquanke.com/member/143742">https://www.anquanke.com/member/143742</a></p>
+<p><strong>在看雪论坛发表的文章</strong></p>
+<p><a target="_blank" rel="noopener" href="https://bbs.pediy.com/user-734571.htm">https://bbs.pediy.com/user-734571.htm</a></p>
+<p><strong>在先知社区发表的文章</strong></p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/u/4572">https://xz.aliyun.com/u/4572</a></p>
+<p><strong>在公司发表的文章(*表示与他人合作)</strong></p>
+<p><a target="_blank" rel="noopener" href="https://cert.360.cn/report/detail?id=39abba91895da7d19d3ec17a5d7be8e0">CVE-2020-3535：Cisco Webex Teams windows客户端dll劫持漏洞分析</a></p>
+<p><a target="_blank" rel="noopener" href="https://cert.360.cn/report/detail?id=d16c909fa6cdfb29b962d557680df45a">CVE-2019-0708 metasploit EXP分析</a></p>
+<p><a target="_blank" rel="noopener" href="https://cert.360.cn/report/detail?id=58e8387ec4c79693354d4797871536ea">CVE-2019-9213——linux内核用户空间0虚拟地址映射漏洞分析</a></p>
+<p><a target="_blank" rel="noopener" href="https://cert.360.cn/report/detail?id=44669690fc7a8daab42472cebd8cfb88">尝试进行RPC漏洞挖掘</a></p>
+<p><a target="_blank" rel="noopener" href="https://cert.360.cn/warning/detail?id=5c88c22c6d6b015e9fc79b9c2d68bca3">VPNFilter Botnet情况更新*</a></p>
+<p><a target="_blank" rel="noopener" href="https://cert.360.cn/report/detail?id=945a1c98a0b2500c9e1654df9edf08eb">VPNFilter-新型IoT Botnet深度解析*</a></p>
+<p><a target="_blank" rel="noopener" href="https://cert.360.cn/report/detail?id=17444eedf20fed4d90c0e071b6b8a718">2017年中国高级持续性威胁研究报告*</a></p>
+<p><a target="_blank" rel="noopener" href="https://cert.360.cn/warning/detail?id=d5a609929388cfd84c7e9aa8fb943265">CVE–2017–13156Janus安卓签名漏洞预警分析</a></p>
+<p><a target="_blank" rel="noopener" href="https://cert.360.cn/report/detail?id=b8d982931c94db2c4a632eaf04188971">坏兔子勒索病毒事件基本分析报告(更新：永恒浪漫漏洞使用技术信息)*</a></p>
+<p><a target="_blank" rel="noopener" href="https://cert.360.cn/warning/detail?id=0dc8a230ad210be8a8b872a73b18d220">CCleaner恶意代码分析预警*</a></p>
+<p><a target="_blank" rel="noopener" href="https://cert.360.cn/report/detail?id=fccc118f08a9956f474a068ef0b5c407">XShellGhost事件技术回顾报告*</a></p>
+<p><a target="_blank" rel="noopener" href="https://cert.360.cn/report/detail?id=6df70c8c9fa83da71e688171702da92f">Sorebrect勒索病毒分析报告</a></p>
+<p><strong>友情链接</strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.th3wind.xyz/">https://blog.th3wind.xyz/</a></p>
+
+      </div>
+      
+      
+      
+    </div>
+    
+
+    
+    
+    
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">houjingyi</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">houjingyi</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

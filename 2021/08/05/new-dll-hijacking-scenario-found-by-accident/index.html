@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Speaking of dll hijacking, many people may think it is very useless.  Some times ago, I accidentally discovered vulnerabilities in dll loading mechanism in cisco webex teams&#x2F;IBM Db2&#x2F;VMware ThinApp tha">
+<meta property="og:type" content="article">
+<meta property="og:title" content="new dll hijacking scenario found by accident">
+<meta property="og:url" content="http://yoursite.com/2021/08/05/new-dll-hijacking-scenario-found-by-accident/index.html">
+<meta property="og:site_name" content="houjingyi">
+<meta property="og:description" content="Speaking of dll hijacking, many people may think it is very useless.  Some times ago, I accidentally discovered vulnerabilities in dll loading mechanism in cisco webex teams&#x2F;IBM Db2&#x2F;VMware ThinApp tha">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://z3.ax1x.com/2021/07/16/WMWmcQ.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/07/16/WMfdxg.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/10/09/0DQdxA.png">
+<meta property="article:published_time" content="2021-08-05T01:44:17.000Z">
+<meta property="article:modified_time" content="2021-08-05T01:44:17.120Z">
+<meta property="article:author" content="houjingyi">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://z3.ax1x.com/2021/07/16/WMWmcQ.png">
+
+<link rel="canonical" href="http://yoursite.com/2021/08/05/new-dll-hijacking-scenario-found-by-accident/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>new dll hijacking scenario found by accident | houjingyi</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">houjingyi</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/08/05/new-dll-hijacking-scenario-found-by-accident/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="houjingyi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="houjingyi">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          new dll hijacking scenario found by accident
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-08-05 09:44:17" itemprop="dateCreated datePublished" datetime="2021-08-05T09:44:17+08:00">2021-08-05</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Speaking of dll hijacking, many people may think it is very useless. </p>
+<p>Some times ago, I accidentally discovered vulnerabilities in dll loading mechanism in cisco webex teams/IBM Db2/VMware ThinApp that can lead to LPE, and as far as I know, no one has ever mentioned this kind of dll hijacking scenario before.</p>
+<p>Vendor advisories:</p>
+<p><a target="_blank" rel="noopener" href="https://www.vmware.com/security/advisories/VMSA-2021-0015.html">VMware ThinApp update addresses a DLL hijacking vulnerability</a><br><a target="_blank" rel="noopener" href="https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-webex-teams-dll-drsnH5AN">Cisco Webex Teams Client for Windows DLL Hijacking Vulnerability</a><br><a target="_blank" rel="noopener" href="https://www.ibm.com/support/pages/node/6370023">Security Bulletin: IBM® Db2® could allow a local authenticated attacker to execute arbitrary code on the system, caused by DLL search order hijacking vulnerability in Microsoft Windows client. (CVE-2020-4739)</a></p>
+<p>Details I posted to full disclosure mailing list:</p>
+<p><a target="_blank" rel="noopener" href="https://seclists.org/fulldisclosure/2021/Jul/35">VMware ThinApp DLL hijacking vulnerability</a><br><a target="_blank" rel="noopener" href="https://seclists.org/fulldisclosure/2021/Feb/73">IBM(R) Db2(R) Windows client DLL Hijacking Vulnerability(0day)</a><br><a target="_blank" rel="noopener" href="https://seclists.org/fulldisclosure/2020/Oct/16">Cisco Webex Teams Client for Windows DLL Hijacking Vulnerability</a></p>
+<p>I will not repeat the details of these vulnerabilities, I will analyze the dll path processing mechanism in ntdll.dll. </p>
+<p>In <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibrarya">document</a> microsoft said:</p>
+<p>The first directory searched is the directory containing the image file used to create the calling process (for more information, see the CreateProcess function). Doing this allows private dynamic-link library (DLL) files associated with a process to be found without adding the process’s installed directory to the PATH environment variable. If a relative path is specified, the entire relative path is appended to every token in the DLL search path list. <strong>To load a module from a relative path without searching any other path, use GetFullPathName to get a nonrelative path and call LoadLibrary with the nonrelative path.</strong> For more information on the DLL search order, see Dynamic-Link Library Search Order.</p>
+<p>So…What will happen if we provide a relative path to LoadLibrary?</p>
+<p>Let us take following code in VMware ThinApp as example:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LoadLibraryExW(<span class="string">L&quot;\\DummyTLS\\dummyTLS.dll&quot;</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>The process is:KernelBase!LoadLibraryExW-&gt;ntdll!LdrpLoadDll-&gt;ntdll!LdrpPreprocessDllName:</p>
+<p><img src="https://z3.ax1x.com/2021/07/16/WMWmcQ.png"></p>
+<p>So RtlDetermineDosPathNameType_Ustr will return 4(RtlPathTypeRooted) and LdrpGetFulPath will return C:\DummyTLS\dummyTLS.dll. You can refer to code in ReactOS:<a target="_blank" rel="noopener" href="https://github.com/mirror/reactos/blob/master/reactos/lib/rtl/path.c">https://github.com/mirror/reactos/blob/master/reactos/lib/rtl/path.c</a>.</p>
+<p><img src="https://z3.ax1x.com/2021/07/16/WMfdxg.md.png"></p>
+<p>So now we know Windows will treat relative path in LoadLibrary/AddDllDirectory…as the path rooted relative to the current disk designator, which is usually C:\. Since non-admin user can create directory under C:\ and write file to it, this cause LPE.</p>
+<p>I also reported my findings to MSRC, but MSRC said this is the default behavior. I am not surprised, if the default behavior is to let developers write vulnerable code, that’s fine.</p>
+<p><img src="https://s1.ax1x.com/2020/10/09/0DQdxA.png"></p>
+<p>I am sharing my discovery because I haven’t seen anyone mention these and similar vulnerabilities exist in other products absolutely. At the same time, I want to remind developers should make sure that all your dlls are loaded correctly.</p>
+<p>Some thoughts:</p>
+<p>1.I don’t understand why Microsoft handle path this way.</p>
+<p>2.This kind of bug would not have appeared if developers had been more careful. </p>
+<p>3.Using relative path is dangerous and I will share some RCE/LPE vulnerabilities I found because of relative path.</p>
+<p>4.Non-admin user can create directory under C:\ and write file to it, this is not right and it caused many LPE vulnerabilities.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/08/05/%E0%B8%96%E0%B8%A1%E0%B8%81%E0%B8%96Malware%20Data%20Science%E0%B8%81%E0%B8%97/" rel="prev" title="读《Malware Data Science》">
+      <i class="fa fa-chevron-left"></i> 读《Malware Data Science》
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">houjingyi</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">houjingyi</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

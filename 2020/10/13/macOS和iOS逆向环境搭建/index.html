@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="最近也在慢慢开始接触一些macOS&#x2F;iOS安全，首先一个难题就是环境搭建。现在的情况是我有一台mac pro 13 2020和一个iphone8，分别记录一下vmware安装macOS虚拟机和iOS越狱降级这两个在调试macOS&#x2F;iOS内核之前必须做的准备工作。 vmware安装macOS虚拟机目前主要有两种方式搭建macOS虚拟机：1.在macOS物理机上能够使用vmware fusion&#x2F;vi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="macOS和iOS逆向环境搭建">
+<meta property="og:url" content="http://yoursite.com/2020/10/13/macOS%E5%92%8CiOS%E9%80%86%E5%90%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/index.html">
+<meta property="og:site_name" content="houjingyi">
+<meta property="og:description" content="最近也在慢慢开始接触一些macOS&#x2F;iOS安全，首先一个难题就是环境搭建。现在的情况是我有一台mac pro 13 2020和一个iphone8，分别记录一下vmware安装macOS虚拟机和iOS越狱降级这两个在调试macOS&#x2F;iOS内核之前必须做的准备工作。 vmware安装macOS虚拟机目前主要有两种方式搭建macOS虚拟机：1.在macOS物理机上能够使用vmware fusion&#x2F;vi">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s1.ax1x.com/2020/04/13/GXagLd.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/04/13/GXaReA.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/04/13/GXa6Qe.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/10/13/0feHeJ.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/10/13/0fta24.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2020/10/13/0ft7If.jpg">
+<meta property="article:published_time" content="2020-10-13T06:45:41.000Z">
+<meta property="article:modified_time" content="2021-08-05T01:44:17.120Z">
+<meta property="article:author" content="houjingyi">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/04/13/GXagLd.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/10/13/macOS%E5%92%8CiOS%E9%80%86%E5%90%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>macOS和iOS逆向环境搭建 | houjingyi</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">houjingyi</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/13/macOS%E5%92%8CiOS%E9%80%86%E5%90%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="houjingyi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="houjingyi">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          macOS和iOS逆向环境搭建
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-13 14:45:41" itemprop="dateCreated datePublished" datetime="2020-10-13T14:45:41+08:00">2020-10-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-05 09:44:17" itemprop="dateModified" datetime="2021-08-05T09:44:17+08:00">2021-08-05</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>最近也在慢慢开始接触一些macOS/iOS安全，首先一个难题就是环境搭建。现在的情况是我有一台mac pro 13 2020和一个iphone8，分别记录一下vmware安装macOS虚拟机和iOS越狱降级这两个在调试macOS/iOS内核之前必须做的准备工作。</p>
+<h2 id="vmware安装macOS虚拟机"><a href="#vmware安装macOS虚拟机" class="headerlink" title="vmware安装macOS虚拟机"></a>vmware安装macOS虚拟机</h2><p>目前主要有两种方式搭建macOS虚拟机：<br>1.在macOS物理机上能够使用vmware fusion/virtualbox或者vagrant搭建macOS虚拟机，说起来倒是很简单：用vmware fusion应该不会有什么坑，用virtualbox也有人把要踩的坑总结好了：<a target="_blank" rel="noopener" href="https://github.com/AlexanderWillner/runMacOSinVirtualBox">Run macOS 10.15 Catalina (and other versions) in VirtualBox on macOS</a>。用vagrant参考<a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/terminal/151326.html">偏执的iOS逆向研究员：收集全版本的macOS iOS+越狱+内核调试</a>这篇文章即可。比较麻烦的是如果用vmware fusion/virtualbox的话sb苹果是不提供完整系统镜像的，得自己找；用vagrant的话又因为大家都知道的原因你得有一个很稳的梯子下那十几个G的镜像文件。<br>2.在linux/windows物理机上因为版权的原因默认是没有合法的手段让你装macOS虚拟机的，最最最常见的方法就是用unlocker patch掉vmware workstation pro然后安装macOS，当然镜像还是得自己找。推荐使用这个branch的unlocker：<a target="_blank" rel="noopener" href="https://github.com/BDisp/unlocker/releases">https://github.com/BDisp/unlocker/releases</a>，当前最新的版本是3.0.3。这个branch的unlocker据我测试应该是能直接用不会有什么坑。不过这里还是要注意一个问题，unlocker中的gettools.exe会去下载com.vmware.fusion.zip.tar并且下载速度很慢，我们可以先去把这个包下好，下载的地址是到<a target="_blank" rel="noopener" href="http://softwareupdate.vmware.com/cds/vmw-desktop/fusion">http://softwareupdate.vmware.com/cds/vmw-desktop/fusion</a>找你用的vmware workstation pro对应的版本即可。更改gettool.py的代码，把下载com.vmware.fusion.zip.tar的代码注释掉，用pyinstaller重新打包一个gettools.exe。以管理员权限运行win-install.cmd，在time.sleep(20)的时候把下载好的com.vmware.fusion.zip.tar拷贝进tools目录即可。</p>
+<p><img src="https://s1.ax1x.com/2020/04/13/GXagLd.png"></p>
+<p>接下来就可以安装macOS了，这里我用的镜像是网上找的一个10.10.2的，如果提示你”没有足够的空间来进行安装”按照网上的方法抹掉vmware的硬盘即可：<a target="_blank" rel="noopener" href="https://blog.csdn.net/wzl19870309/article/details/71194389">OS X Base System 上没有足够的空间来进行安装</a>。除此之外我没有遇到任何问题。</p>
+<p><img src="https://s1.ax1x.com/2020/04/13/GXaReA.png"></p>
+<p>最后就是安装VMware Tools了，gettools.exe已经下载好了darwin.iso和darwinPre15.iso，我的vmware workstation pro是15.5.1版的，应该用darwinPre15.iso。</p>
+<p><img src="https://s1.ax1x.com/2020/04/13/GXa6Qe.png"></p>
+<p>关闭虚拟机，编辑虚拟机，设置CD/DVD，使用ISO映像为darwinPre15.iso。开启虚拟机之后会看到桌面的VMware Tools，直接安装就OK了。</p>
+<p>很多时候如果你发现github上某个工具因为已经没有维护而不能使用的时候一个小技巧就是去看看issue或者pull request里面有没有人还在继续维护。本来最先搜到的是<a target="_blank" rel="noopener" href="https://github.com/theJaxon/unlocker">https://github.com/theJaxon/unlocker</a>，因为没有维护了所以遇到一点问题，在pull request里面找到了另外有人维护的<a target="_blank" rel="noopener" href="https://github.com/BDisp/unlocker">https://github.com/BDisp/unlocker</a>。去年也是，升级了vmware workstation pro之后<a target="_blank" rel="noopener" href="https://github.com/sysprogs/VirtualKD">https://github.com/sysprogs/VirtualKD</a>也没法用了，在issue里面找到了另外有人维护的<a target="_blank" rel="noopener" href="https://github.com/4d61726b/VirtualKD-Redux">https://github.com/4d61726b/VirtualKD-Redux</a>。想学习MachO文件格式，<a target="_blank" rel="noopener" href="https://github.com/gdbinit/MachOView">https://github.com/gdbinit/MachOView</a>早已无人维护，在issue里面找到了另外有人维护的<a target="_blank" rel="noopener" href="https://github.com/mythkiven/MachOView">https://github.com/mythkiven/MachOView</a>……感谢这些编写维护开源软件的大神，不然这些问题真是让人够头疼的。</p>
+<h2 id="iOS越狱降级"><a href="#iOS越狱降级" class="headerlink" title="iOS越狱降级"></a>iOS越狱降级</h2><p>首先肯定大家都明白越狱是个什么意思，就和你研究android安全肯定需要有一台root过的手机一样，我们也需要一台越狱的iPhone。不过越狱有四种。</p>
+<p>完美越狱(Tethered Jailbreak)<br>不完美越狱(Untethered Jailbreak)<br>半完美越狱(Semi-tethered Jailbreak)<br>半不完美越狱(Semi-untethered Jailbreak)</p>
+<p>我画了个图，你一看就明白了。tether是拴绳拴链的意思，tethered就是需要数据线连电脑，untethered就是不需要数据线连电脑。</p>
+<p><img src="https://s1.ax1x.com/2020/10/13/0feHeJ.png"></p>
+<p>如果你不知道你的iPhone能不能越狱，你可以到这个网站上查：<a target="_blank" rel="noopener" href="https://canijailbreak.com/">https://canijailbreak.com/</a></p>
+<p>一看之后你就会发现这几年出的越狱都是半不完美越狱，因为现在苹果的保护措施越来越完善，完美越狱有当然是有，但是能值很多钱，人家不会公开。这几年越狱界最大的新闻就是被称为史诗级漏洞的checkm8了，因为这个漏洞存在于BootROM中，无法通过软件更新的方式修复，所以理论上来讲只要你的iPhone在受影响的设备范围内，不管你怎么升级系统都能用这个漏洞越狱。我们直接去<a target="_blank" rel="noopener" href="https://checkra.in/">https://checkra.in/</a>下载越狱程序按照上面的说明来就可以了。越狱之后该在Cydia里面装什么等等网上都有很多文章了，这里就不再说了。</p>
+<p>接下来说说怎么降级。降级不是你想降就能降的，iOS设备上的固件恢复需要配合Apple服务器进行校验，Apple停止公开验证某个固件版本时，iOS设备就不能从高版本恢复到停止验证的版本。iOS在更新设备固件的过程中会将设备的ECID等信息以及一个一次使用的nonce发送给Apple服务器，服务器在校验通过后会返回校验结果，结果使用非对称算法加密，在没有私钥的情况下无法解密也无法伪造。但是我们可以将校验结果保存下来，之后Apple不再提供此版本校验的时候重放校验过程，实现iOS降级到不提供验证的版本。</p>
+<p>说了一大堆可能有点晕了，我们来实际操作一下。现在Apple只会验证最新的iOS 14.0.1版本，我的iPhone8是iOS 13，因为我以前没有保存校验结果，所以理论上现在我没有任何办法将我的iPhone8降级到一个更低的版本。但是现在我可以保存14.0.1的校验结果，假设说以后我的iPhone8升级到了iOS 14.0.2，理论上我就可以通过这个保存的校验结果降级到14.0.1。</p>
+<p>首先checkra1n越狱之后我们添加repo:halo-michale.github.io/repo/，安装插件Generator Auto Setter，默认会写入Generator值为一串0x1把nonce固定，这样也方便我们以后降级。然后我们打开爱思助手查ECID：</p>
+<p><img src="https://s1.ax1x.com/2020/10/13/0fta24.jpg"></p>
+<p>点击查看设备详情查硬件模型：</p>
+<p><img src="https://s1.ax1x.com/2020/10/13/0ft7If.jpg"></p>
+<p>然后到<a target="_blank" rel="noopener" href="https://tsssaver.1conan.com/">https://tsssaver.1conan.com/</a>把这些信息填进去点击submit，就可以下载shsh2文件了。在将来的某个时候如果想降级到这个版本我们可以使用<a target="_blank" rel="noopener" href="https://github.com/tihmstar/futurerestore">futurerestore</a>，在设备进入kDFU/pwnDFU模式之后用像这样的命令完成降级：</p>
+<p>./futurerestore -t xxx.shsh2 –latest-sep –latest-baseband xxxx.ipsw</p>
+<p>更新的iPhone和iOS操作似乎还有些不一样，以后如果需要的话再补充。</p>
+<p>不过这还没完，苹果还有一个SEP机制(Secure Enclave Processor，安全区域处理器)，如果降级的iOS系统与当前的SEP不兼容，那么降级会被禁止。iOS13范围内SEP都是兼容的，那么你只要备份过对应版本的shsh2文件，就可以在iOS13范围内降级。但是网上我看说如果你升级到iOS14，即使有iOS13的shsh2文件就会因为SEP不兼容无法降级。</p>
+<p>所以iOS的越狱降级这些还真的挺头疼的……</p>
+<p>最后再扯下如何入门macOS/iOS安全，经过一段时间的探索我有如下想法：</p>
+<p>1.学<a target="_blank" rel="noopener" href="http://www.newosxbook.com/index.php">http://www.newosxbook.com/index.php</a>上的三本书，建议海淘。国内那些写macOS/iOS的书我翻了几本得出的结论是都不用买。当然就这么看肯定是非常枯燥的，所以我建议有时间就翻翻，一次也不用看太多。</p>
+<p>2.学习各种出现的macOS/iOS漏洞，主要是project zero的。</p>
+<p>目前我也是积极在整理这些历史漏洞：<a target="_blank" rel="noopener" href="https://github.com/houjingyi233/macOS-iOS-exploit-writeup">https://github.com/houjingyi233/macOS-iOS-exploit-writeup</a></p>
+<p>3.从推特或者关注的大牛那里获取一些他们的研究成果然后学习。</p>
+<p>如果遇到其它环境方面的问题我也会继续在这篇文章里面更新，2020年争取也写一些macOS/iOS漏洞研究方面的文章！</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2021/08/05/%E7%BB%99linux%E5%86%85%E6%A0%B8%E6%8F%90%E4%BA%A4%E4%BB%A3%E7%A0%81/" rel="next" title="给linux内核提交代码">
+      给linux内核提交代码 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#vmware%E5%AE%89%E8%A3%85macOS%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="nav-number">1.</span> <span class="nav-text">vmware安装macOS虚拟机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iOS%E8%B6%8A%E7%8B%B1%E9%99%8D%E7%BA%A7"><span class="nav-number">2.</span> <span class="nav-text">iOS越狱降级</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">houjingyi</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">houjingyi</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
