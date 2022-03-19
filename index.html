@@ -21,8 +21,8 @@
                 }
             }
         </script>
-        <!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.0.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">houjingyi</a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item is-active" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2022-03-19T02:38:03.000Z" title="3/19/2022, 10:38:03 AM">2022-03-19</time>发表</span><span class="level-item"><time dateTime="2022-03-19T02:38:03.000Z" title="3/19/2022, 10:38:03 AM">2022-03-19</time>更新</span><span class="level-item">11 分钟读完 (大约1629个字)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/03/19/cisco%E8%AE%BE%E5%A4%87CDP%E5%8D%8F%E8%AE%AE%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E6%8C%96%E6%8E%98/">cisco设备CDP协议漏洞分析与挖掘</a></h1><div class="content"><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>去年还在研究挖洞的时候注意到了cisco设备的CVE-2020-3119漏洞，其实也是搞研究时间长了的一种直觉，觉得这个攻击面还可以再挖一挖，最终也是fuzz出一个DOS的洞CVE-2022-20625，也算还好吧，就简单分享一下。<br>注意：这篇笔记写于2021年4月向cisco报告漏洞之后，现在一些环境配置步骤等等可能已经发生变化。</p>
-<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>固件提取有两种方法：一是搭建好环境之后ssh拷贝出固件；二是用<a target="_blank" rel="noopener" href="https://gist.github.com/shamil/62935d9b456a6f9877b5">How to mount a qcow2 disk image</a>这里面的方法挂在qcow2文件，得到bin文件之后解压得到固件。我看参考的博客里面说第二种方法可以，但是我没有成功，我是用的第一种方法。</p>
+        <!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.0.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">houjingyi</a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item is-active" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2022-03-19T02:38:03.000Z" title="3/19/2022, 10:38:03 AM">2022-03-19</time>发表</span><span class="level-item"><time dateTime="2022-03-19T02:38:03.000Z" title="3/19/2022, 10:38:03 AM">2022-03-19</time>更新</span><span class="level-item">11 分钟读完 (大约1699个字)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/03/19/cisco%E8%AE%BE%E5%A4%87CDP%E5%8D%8F%E8%AE%AE%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E6%8C%96%E6%8E%98/">cisco设备CDP协议漏洞分析与挖掘</a></h1><div class="content"><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>去年还在研究挖洞的时候注意到了cisco设备的CVE-2020-3119漏洞，其实也是搞研究时间长了的一种直觉，觉得这个攻击面还可以再挖一挖，最终也是fuzz出一个DOS的洞CVE-2022-20625，也算还好吧，就简单分享一下。<br>注意：这篇笔记写于2021年4月向cisco报告漏洞之后，现在一些环境配置步骤等等可能已经发生变化。</p>
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>固件提取有两种方法：一是搭建好环境之后ssh拷贝出固件；二是用<a target="_blank" rel="noopener" href="https://gist.github.com/shamil/62935d9b456a6f9877b5">How to mount a qcow2 disk image</a>这里面的方法挂载qcow2文件，得到bin文件之后解压得到固件。我看参考的博客里面说第二种方法可以，但是我没有成功，我是用的第一种方法。</p>
 <p>这里我们通过GNS3去仿真。我的环境是这样的：windows物理机上运行了VMware，在VMware里运行了GNS3 VM，在GNS3 VM里通过qemu运行交换机。然后VMware还运行了一个ubuntu虚拟机，在ubuntu虚拟机里面可以telnet到交换机和执行其他操作。建议windows物理机内存&gt;=16G。</p>
 <p>下载GNS3-2.2.19-all-in-one-regular.exe然后直接双击安装。勾选GNS3 WebClient和GNS3 VM。</p>
 <p><img src="https://s1.ax1x.com/2022/03/19/qAC2zn.png"></p>
@@ -42,7 +42,7 @@
 <p><img src="https://s1.ax1x.com/2022/03/19/qAFirt.png"></p>
 <p>我们需要有对应版本固件的fd文件和qcow2文件。这个fd文件还是可以在gns3的网站上下载(<a target="_blank" rel="noopener" href="https://docs-v1.gns3.com/appliances/cisco-nxosv9k.html">https://docs-v1.gns3.com/appliances/cisco-nxosv9k.html</a>), qcow2文件需要到cisco的网站上下载。</p>
 <p><img src="https://s1.ax1x.com/2022/03/19/qAFws1.png"></p>
-<p>成功导入之后在switches中就可以看到了。然后我们新建一个project，把它拖进去，再在End devices中选择Cloud拖进去。我们把Cloud拖进去的时候可以选择宿主机或者GNS3 VM作为Server,这里选择GNS3 VM。</p>
+<p>成功导入之后在switches中就可以看到了。然后我们新建一个project，把它拖进去，再在End devices中选择Cloud拖进去。我们把Cloud拖进去的时候可以选择宿主机或者GNS3 VM作为Server，这里选择GNS3 VM。</p>
 <p><img src="https://s1.ax1x.com/2022/03/19/qAFWQA.png"></p>
 <p>然后把它们连起来，再点击绿色的三角形启动设备。</p>
 <p><img src="https://s1.ax1x.com/2022/03/19/qAFxe0.png"></p>
@@ -50,20 +50,22 @@
 <p><img src="https://s1.ax1x.com/2022/03/19/qAkmTK.png"></p>
 <p>等待一段时间之后会让你输入yes/skip/no配置一个什么东西，我输的是skip。然后用用户名admin，密码为空就可以登录了。</p>
 <p><img src="https://s1.ax1x.com/2022/03/19/qAkBlj.png"></p>
-<p>最后需要配置交换机的ip地址。我们可以看到，我们设置连接的网卡是Ethernet 1/8,对应的MAC地址是0c:05:f5:bc:de:08。</p>
+<p>最后需要配置交换机的ip地址。我们可以看到，我们设置连接的网卡是Ethernet 1/8，对应的MAC地址是0c:05:f5:bc:de:08。</p>
 <p><img src="https://s1.ax1x.com/2022/03/19/qAk600.png"></p>
 <p>找到这个MAC地址对应的网卡给它设置ip地址。</p>
 <p><img src="https://s1.ax1x.com/2022/03/19/qAkv1H.png"></p>
 <p>最后把ubuntu虚拟机上的公钥放到交换机的/root/.ssh/authorized_keys就可以用ssh登录了。有时交换机会crash掉出现No autoboot or failed autoboot. falling to loader这样的提示。目前没有找到好的解决方法，只能每次都重装一遍。如果有知道怎么办的师傅还希望能告知下。</p>
-<h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p>这里因为参考文章中都给出了非常详细的分析所以就不再赘述。根据参考文章中得到一个非常简单的POC，效果如下：</p>
+<h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p>这里因为参考文章中都给出了非常详细的分析所以就不再赘述。根据参考文章得到一个非常简单的POC，效果如下：</p>
 <p><img src="https://s1.ax1x.com/2022/03/19/qAEirR.png"></p>
 <h2 id="漏洞挖掘"><a href="#漏洞挖掘" class="headerlink" title="漏洞挖掘"></a>漏洞挖掘</h2><p>我们可以想一下如果是我们自己去挖怎么才能去挖到这个协议里面的漏洞。如果大家去复现了这个漏洞就会发现cdpd程序crash掉之后会自动重启并显示类似于Service “xxx” (PID 5883) hasn’t caught signal 11 (core will be saved)这样的信息。</p>
-<p>那么这里我的想法很简单，就基于scapy实现的cdp去发变异的数据包，观察有没有core dump文件。很多人特别是新手挖洞可能会有顾虑，特别是这种黑盒设备的网络协议fuzz不像在PC端有AFL之类非常完善的现成工具，一会儿想怎么去做代码覆盖率一会想怎么去做crash监控，其实没有必要，先把dumb fuzzer做出来，挖不到洞再完善。我当时当然也有运气的成分，dumb fuzzer就直接搞出crash了。并且其实我觉得cdp协议的这种情况dumb fuzzer也已经足够了，因为scapy实现的cdp已经足够完善，不存在说有了代码覆盖率的fuzzer能构造出的数据包dumb fuzzer就构造不出来。</p>
+<p>那么这里我的想法就是dumb fuzzer，基于scapy实现的cdp去发变异的数据包。很多人特别是新手挖洞可能会有顾虑，特别是这种黑盒设备的网络协议fuzz不像在PC端有AFL之类非常完善的现成工具，一会儿想怎么去做代码覆盖率一会想怎么去做crash监控，其实没有必要，先把dumb fuzzer做出来，挖不到洞再完善。我给其他厂商报过的一些溢出的洞有的也是dumb fuzzer搞出来的。并且其实我觉得cdp协议的这种情况dumb fuzzer已经足够了，因为scapy实现的cdp已经足够完善，不存在说有了代码覆盖率的fuzzer能构造出的数据包dumb fuzzer就构造不出来；至于crash监控因为这个进程crash掉之后会自动重启，并且我也不熟悉这个设备，所以其实也没什么好的办法，只能人肉时不时看一下。</p>
+<p>这就是我搞出来的crash：</p>
+<p><img src="https://s1.ax1x.com/2022/03/19/qAmdhV.png"></p>
 <p>接下来为了分析crash需要提取core dump。首先我们在ubuntu虚拟机上用vsftp搭建一个ftp服务器，这个很简单具体步骤就不说了。然后在交换机上启用interface vlan：</p>
 <p><img src="https://s1.ax1x.com/2022/03/19/qAEGIf.png"></p>
 <p>给它设一个IP地址，在ubuntu虚拟机里面能ping到就行。</p>
 <p><img src="https://s1.ax1x.com/2022/03/19/qAELSe.png"></p>
-<p>这时就可以通过ftp拷贝到我们的ubuntu虚拟机上方便进一步分析。</p>
+<p>这时就可以通过ftp把core dump拷贝到我们的ubuntu虚拟机上方便进一步分析。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">copy core://&lt;slot #&gt;/&lt;PID&gt; ftp://&lt;FTP IP addr&gt;/&lt;directory&gt;/&lt;filename&gt;</span><br></pre></td></tr></table></figure>
 
 <p><img src="https://s1.ax1x.com/2022/03/19/qAVB1e.png"></p>
@@ -129,7 +131,7 @@
 <p>目前我也是积极在整理这些历史漏洞：<a target="_blank" rel="noopener" href="https://github.com/houjingyi233/macOS-iOS-exploit-writeup">https://github.com/houjingyi233/macOS-iOS-exploit-writeup</a></p>
 <p>3.从推特或者关注的大牛那里获取一些他们的研究成果然后学习。</p>
 <p>如果遇到其它环境方面的问题我也会继续在这篇文章里面更新，2020年争取也写一些macOS/iOS漏洞研究方面的文章！</p>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-04-05T06:45:41.000Z" title="4/5/2020, 2:45:41 PM">2020-04-05</time>发表</span><span class="level-item"><time dateTime="2021-08-05T01:55:58.240Z" title="8/5/2021, 9:55:58 AM">2021-08-05</time>更新</span><span class="level-item">11 分钟读完 (大约1661个字)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/04/05/%E4%B8%80%E6%AC%A1%E7%BB%99%E7%88%B1%E5%A5%87%E8%89%BASRC%E6%8A%A5%E5%91%8A%E6%BC%8F%E6%B4%9E%E7%9A%84%E7%BB%8F%E5%8E%86/">一次给爱奇艺SRC报告漏洞的经历</a></h1><div class="content"><p>先给大家看看时间线吧(漏洞已经被修复)：<br>2020-01-06：发现爱奇艺客户端某个需要用户发生交互的场景可以导致远程代码执行，报告到爱奇艺SRC<br>2020-01-08：发现报告被关闭，留言反馈<br>2020-01-09：发送邮件到<a href="mailto:&#x37;&#x31;&#115;&#114;&#x63;&#x40;&#113;&#105;&#x79;&#x69;&#46;&#99;&#x6f;&#109;">&#x37;&#x31;&#115;&#114;&#x63;&#x40;&#113;&#105;&#x79;&#x69;&#46;&#99;&#x6f;&#109;</a><br>2020-01-09：爱奇艺SRC负责人表示审核人员看错了，让我重复提交一次<br>2020-01-10：重新提交了漏洞<br>2020-02-21：通过QQ向爱奇艺SRC运营反馈这个漏洞不应该被评为中危应该是高危，对方表示会讨论<br>2020-03-06：再次通过QQ向爱奇艺SRC运营询问，对方表示还没有上班<br>2020-04-01：再次通过QQ向爱奇艺SRC运营询问，对方表示这周之内答复<br>2020-04-03：和爱奇艺SRC运营讨论交流，对他们的工作提出了批评和质疑，对方补发了金币和奖励</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-04-05T06:45:41.000Z" title="4/5/2020, 2:45:41 PM">2020-04-05</time>发表</span><span class="level-item"><time dateTime="2021-08-05T01:55:58.240Z" title="8/5/2021, 9:55:58 AM">2021-08-05</time>更新</span><span class="level-item">11 分钟读完 (大约1661个字)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/04/05/%E4%B8%80%E6%AC%A1%E7%BB%99%E7%88%B1%E5%A5%87%E8%89%BASRC%E6%8A%A5%E5%91%8A%E6%BC%8F%E6%B4%9E%E7%9A%84%E7%BB%8F%E5%8E%86/">一次给爱奇艺SRC报告漏洞的经历</a></h1><div class="content"><p>先给大家看看时间线吧(漏洞已经被修复)：<br>2020-01-06：发现爱奇艺客户端某个需要用户发生交互的场景可以导致远程代码执行，报告到爱奇艺SRC<br>2020-01-08：发现报告被关闭，留言反馈<br>2020-01-09：发送邮件到<a href="mailto:&#x37;&#49;&#x73;&#x72;&#x63;&#x40;&#113;&#x69;&#121;&#x69;&#46;&#x63;&#x6f;&#109;">&#x37;&#49;&#x73;&#x72;&#x63;&#x40;&#113;&#x69;&#121;&#x69;&#46;&#x63;&#x6f;&#109;</a><br>2020-01-09：爱奇艺SRC负责人表示审核人员看错了，让我重复提交一次<br>2020-01-10：重新提交了漏洞<br>2020-02-21：通过QQ向爱奇艺SRC运营反馈这个漏洞不应该被评为中危应该是高危，对方表示会讨论<br>2020-03-06：再次通过QQ向爱奇艺SRC运营询问，对方表示还没有上班<br>2020-04-01：再次通过QQ向爱奇艺SRC运营询问，对方表示这周之内答复<br>2020-04-03：和爱奇艺SRC运营讨论交流，对他们的工作提出了批评和质疑，对方补发了金币和奖励</p>
 <p>我不能理解的事情有这么几个：<br>1.市值上百亿美元的美股上市公司审核漏洞为何如此随意？一个能影响爱奇艺windows客户端至少几百万用户的高危漏洞能被审核人员看错直接忽略？我在漏洞下面留言没有回应，直到我发邮件询问。爱奇艺SRC的运营流程和审核人员工作的专业和态度为什么有这么严重的问题？</p>
 <p><img src="https://s1.ax1x.com/2020/04/13/GXafot.png"></p>
 <p><img src="https://s1.ax1x.com/2020/04/13/GX2O0K.png"></p>
@@ -138,7 +140,7 @@
 <p>3.我和爱奇艺SRC运营沟通的过程中一直保持文明礼貌，克制自己的情绪，爱奇艺SRC运营为什么给我发送了一个微笑的表情？</p>
 <p><img src="https://s1.ax1x.com/2020/04/13/GX27lR.jpg"></p>
 <p>4.为什么不给我道歉？是不是爱奇艺SRC觉得白帽子好欺负还是爱奇艺SRC觉得自己很牛逼不需要道歉又或者是爱奇艺SRC觉得自己什么也没有做错？</p>
-<p>我那天在朋友圈吐槽完了之后觉得还没有发泄够，于是给<a href="mailto:&#x37;&#x31;&#115;&#x72;&#99;&#x40;&#x71;&#105;&#121;&#105;&#x2e;&#99;&#111;&#x6d;">&#x37;&#x31;&#115;&#x72;&#99;&#x40;&#x71;&#105;&#121;&#105;&#x2e;&#99;&#111;&#x6d;</a>发了邮件，问了他们这几个问题，同时我也问他们爱奇艺SRC存在的意义是什么？是觉得其它公司有所以我们也要有糊弄一下就行给老板做一下样子还是真的觉得安全问题很重要？</p>
+<p>我那天在朋友圈吐槽完了之后觉得还没有发泄够，于是给<a href="mailto:&#x37;&#x31;&#115;&#114;&#x63;&#64;&#113;&#105;&#121;&#105;&#x2e;&#99;&#111;&#109;">&#x37;&#x31;&#115;&#114;&#x63;&#64;&#113;&#105;&#121;&#105;&#x2e;&#99;&#111;&#109;</a>发了邮件，问了他们这几个问题，同时我也问他们爱奇艺SRC存在的意义是什么？是觉得其它公司有所以我们也要有糊弄一下就行给老板做一下样子还是真的觉得安全问题很重要？</p>
 <p>因为我不想再理这群人，所以我邮件里面说请你们不要回复我。之后爱奇艺SRC负责人在之前拉的群里说可以给我补偿一张爱奇艺年卡激活码，当然仍然没有道歉。我不想理他，他加我QQ好友我也没通过，因为我作为一名安全研究人员已经被这家SRC侮辱到体无完肤，我很担心他对我继续进行侮辱。</p>
 <p><img src="https://s1.ax1x.com/2020/04/13/GX2Tp9.jpg"></p>
 <p>我虽然穷但是我不是为了钱，我只是想讲道理。开始认定中危给了我100个积分，死皮烂脸扯了这么久补发了我100个积分，按照爱奇艺SRC上的规定相当于能换300块+300块的京东卡，我特么还真的不在乎。不是说嫌钱少，甲方做安全可能资源是有限的，钱少不是不可以理解，但是该高危为什么要评中危？我也明确承认是需要用户交互的，无意夸大漏洞危害，无交互就应该是“严重”而不是“高危”了。</p>
